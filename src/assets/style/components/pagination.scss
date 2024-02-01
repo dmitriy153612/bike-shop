@@ -1,0 +1,52 @@
+.pagination {
+  display: flex;
+  justify-content: center;
+  padding: 10px 10px;
+  width: 100%;
+  background-color: $color2;
+  &__inner {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    gap: 10px;
+  }
+
+  &__list-btn {
+    display: flex;
+    gap: 2px;
+  }
+  &__btn {
+    cursor: pointer;
+    border: 1px solid $color2;
+    border: 1px solid transparent;
+    font-size: 20px;
+    color: $color1;
+    background-color: transparent;
+    transition: border-color 0.2s ease;
+    transition-property: border-color, color, transform;
+    transition-duration: 0.2s;
+    transition-timing-function: ease;
+    outline: none;
+  }
+  &__btn:focus {
+    border-color: $color1;
+  }
+  &__btn-control {
+    padding: 0 5px;
+    font-size: 22px;
+    background-color: transparent;
+    line-height: 100%;
+  }
+
+  @media (min-width: $hover-min-width) {
+    &__btn--left:hover {
+      transform: translateX(-7%);
+    }
+    &__btn--right:hover {
+      transform: translateX(7%);
+    }
+  }
+  &__btn-page.checked {
+    color: $color3;
+    transform: scale(1.4);
+  }
+}

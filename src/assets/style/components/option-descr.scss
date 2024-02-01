@@ -1,0 +1,9 @@
+.option-descr {
+  display: flex;
+  column-gap: 10px;
+  flex-wrap: nowrap;
+  &__name {
+    white-space: nowrap;
+    font-weight: 600;
+  }
+}

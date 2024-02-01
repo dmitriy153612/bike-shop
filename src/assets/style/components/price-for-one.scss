@@ -1,0 +1,8 @@
+.price-for-one {
+  display: grid;
+  font-weight: 600;
+  &__price {
+    color: $color5;
+    font-size: 12px;
+  }
+}

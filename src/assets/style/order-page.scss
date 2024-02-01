@@ -1,0 +1,462 @@
+.order-sec {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  column-gap: 20px;
+  &__title {
+    grid-column: 1 / 3;
+  }
+
+  &__order-form {
+    position: sticky;
+    top: 120px;
+    align-self: flex-start;
+  }
+  &__btn-submit {
+    justify-self: center;
+  }
+}
+
+.app-input__input {
+  border-color: $color8;
+}
+
+.order-fieldset {
+  position: relative;
+  margin: 0;
+  padding: 18px;
+  border-radius: 15px;
+  border-color: transparent;
+  box-shadow: 0px 0px 4px 2px rgba(0, 0, 0, 0.1);
+  &__legend {
+    position: absolute;
+    top: -28px;
+    left: 18px;
+    font-size: 18px;
+  }
+}
+
+.order-placing {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  column-gap: 20px;
+  row-gap: 40px;
+  padding: 40px 20px 20px;
+  margin-bottom: 20px;
+
+  border-radius: 15px;
+  box-shadow: 0px 0px 9px 3px rgba(0, 0, 0, 0.32);
+  &__switcher {
+    grid-column: 1 / 3;
+  }
+}
+.pickup-addresses,
+.order-delivery,
+.order-user {
+  display: grid;
+  gap: 18px;
+  align-self: flex-start;
+}
+.order-user {
+  min-width: 198px;
+}
+
+.order-delivery {
+  grid-template-columns: repeat(3, 1fr);
+  &__input-city {
+    grid-column: 1 / 4;
+  }
+  &__input-street {
+    grid-column: 1 / 4;
+  }
+}
+
+.pickup-addresses {
+  padding: 10px 4px 0 0;
+  max-height: 285px;
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+}
+
+.order-radio {
+  @media (min-width: $hover-min-width) {
+    &:hover {
+      background-color: lighten($color1, 38%);
+    }
+  }
+  &__input {
+    position: absolute;
+    transform: scale(0);
+  }
+  &__label {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    justify-content: center;
+    gap: 6px;
+    align-items: flex-end;
+    padding: 6px 6px 6px 34px;
+    height: 100%;
+    cursor: pointer;
+
+    border: 2px solid $color8;
+    border-radius: 6px;
+    transition-property: border-color, background-color;
+    transition-duration: 0.2s;
+    transition-timing-function: ease;
+  }
+  &__label.selected {
+    background-color: lighten($color1, 25%);
+    border-color: $color1;
+  }
+  &__label::before {
+    position: absolute;
+    top: 50%;
+    left: 6px;
+    content: '';
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid $color5;
+    transform: translateY(-50%);
+  }
+  &__label::after {
+    position: absolute;
+    top: 50%;
+    left: 11px;
+    content: '';
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: transparent;
+    transform: translateY(-50%);
+    transition: background-color 0.2s ease;
+  }
+  &__input:focus + &__label {
+    border-color: $color3;
+  }
+
+  &__input:checked + label::after {
+    background-color: $color3;
+  }
+  &__input:checked + label::before {
+    border-color: $color3;
+  }
+  &__metro-box {
+    display: flex;
+    gap: 4px;
+    align-items: flex-end;
+  }
+  &__svg {
+    height: 24px;
+    width: 24px;
+  }
+  &__metro {
+    line-height: 1;
+    font-weight: 600;
+  }
+  &__address {
+    grid-column: 1;
+    padding-left: 28px;
+    line-height: 1;
+  }
+  &__date-box {
+    display: grid;
+    align-self: flex-start;
+    grid-column: 2;
+    grid-row: 1 / 3;
+    font-size: 12px;
+  }
+  &__date-item {
+    display: flex;
+    gap: 4px;
+    justify-content: space-between;
+  }
+  &__day {
+    white-space: nowrap;
+    font-weight: 600;
+  }
+  &__time {
+    white-space: nowrap;
+  }
+  &__date-item {
+    flex-wrap: nowrap;
+  }
+}
+
+.order-switcher {
+  &__disabled {
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    border-radius: 6px;
+    background-color: $color8;
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  &__list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin: 0;
+  }
+  &__item {
+    position: relative;
+  }
+  &__label {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+  }
+  &__svg-box {
+    display: flex;
+    gap: 6px;
+  }
+  &__svg {
+    justify-self: flex-end;
+    height: 40px;
+    width: 40px;
+    fill: $color1;
+    transition: fill 0.2s ease;
+  }
+  &__input:checked + &__label &__svg {
+    fill: $color3;
+  }
+  &__type {
+    font-weight: 600;
+  }
+  &__type-disabled {
+    color: $color5;
+  }
+  &__price {
+    align-self: flex-start;
+  }
+  &__time {
+    color: $color2;
+    font-weight: 400;
+    font-size: 14px;
+  }
+}
+
+.order-list-wrapper {
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0px 0px 9px 3px rgba(0, 0, 0, 0.32);
+  &__title {
+    margin: 0 0 8px;
+    font-size: 18px;
+    font-weight: 600;
+  }
+}
+
+.order-list {
+  display: grid;
+  gap: 20px;
+}
+.order-item {
+  display: grid;
+  grid-template-columns: auto 1fr 130px 80px 180px;
+  gap: 14px;
+  border: 1px solid $color8;
+  border-radius: 6px;
+  padding: 6px;
+
+  &__link {
+    grid-column: 1;
+    grid-row: 1 / 3;
+  }
+  &__img {
+    width: 80px;
+    height: auto;
+  }
+  &__title {
+    grid-column: 2;
+    grid-row: 1 / 3;
+    margin: 0;
+    font-size: 18px;
+  }
+  &__size {
+    grid-column: 3;
+    grid-row: 1;
+  }
+  &__color {
+    grid-column: 3;
+    grid-row: 2;
+  }
+  &__price-for-one {
+    grid-column: 4;
+    grid-row: 1 / 3;
+    justify-self: flex-end;
+  }
+  &__price {
+    grid-column: 5;
+    grid-row: 1;
+  }
+  .price {
+    flex-direction: row-reverse;
+  }
+  &__price-difference {
+    grid-column: 5;
+    grid-row: 2;
+    justify-self: flex-end;
+  }
+  &__price-difference .option-descr__value {
+    color: $color3;
+  }
+  &__size,
+  &__color,
+  &__price-difference {
+    font-size: 14px;
+  }
+  &__price .price__current-price {
+    font-size: 16px;
+  }
+  &__price .price__old-price {
+    font-size: 14px;
+  }
+}
+.order-message-text {
+  margin: 0;
+  font-size: 22px;
+}
+
+@media (max-width: 1024px) {
+  .order-sec {
+    grid-template-columns: 1fr;
+    &__title {
+      grid-column: 1;
+    }
+    &__order-form {
+      grid-row: 4;
+      justify-self: center;
+    }
+    &__list-wrapper {
+      margin-bottom: 20px;
+    }
+    &__btn-submit {
+      justify-self: stretch;
+    }
+  }
+  .pickup-addresses {
+    max-height: 340px;
+  }
+  .order-item {
+    grid-template-columns: auto 1fr 120px 180px;
+    &__link {
+      grid-row: 1 / 4;
+      align-self: center;
+    }
+    &__price-for-one {
+      grid-row: 3;
+      grid-row: 2;
+    }
+    &__price {
+      grid-column: 4;
+    }
+    &__price-difference {
+      grid-column: 4;
+      grid-row: 3;
+    }
+    .price-for-one {
+      grid-template-columns: max-content auto;
+      column-gap: 4px;
+      &__amount {
+        font-size: 14px;
+      }
+    }
+  }
+}
+@media (max-width: 768px) {
+  .order-switcher {
+    &__list {
+      grid-template-columns: 1fr;
+    }
+  }
+  .order-placing {
+    grid-template-columns: 1fr;
+    &__switcher {
+      grid-column: 1;
+    }
+    &__delivery {
+      grid-column: 1;
+      grid-row: 2;
+    }
+    &__user {
+      grid-column: 1;
+      grid-row: 3;
+    }
+  }
+  .order-item {
+    grid-template-columns: auto 1fr 100px;
+    gap: 6px;
+    &__link {
+      grid-row: 2 / 5;
+    }
+    &__title {
+      grid-column: 1 / 3;
+      grid-row: 1;
+    }
+    &__size {
+      grid-column: 2;
+      grid-row: 2;
+    }
+    &__color {
+      grid-column: 2;
+      grid-row: 3;
+    }
+    &__price {
+      grid-column: 3;
+      grid-row: 1 / 3;
+      justify-self: flex-end;
+    }
+    .price {
+      flex-direction: column;
+      gap: 2px;
+    }
+    &__price-for-one {
+      grid-column: 3;
+      grid-row: 3 / 5;
+    }
+    .price-for-one {
+      grid-template-columns: 1fr;
+      justify-items: flex-end;
+    }
+    &__price-difference {
+      grid-column: 3;
+      grid-row: 5;
+      .option-descr__name {
+        display: none;
+      }
+    }
+  }
+}
+
+@media (max-width: 568px) {
+  .order-switcher {
+    &__svg-box {
+      flex-direction: column;
+      gap: 0;
+    }
+  }
+  .pickup-addresses {
+    .order-radio {
+      grid-template-columns: 1fr;
+      &__metro-box {
+        grid-column: 1;
+        grid-row: 1;
+      }
+      &__date-box {
+        grid-column: 1;
+        grid-row: 2;
+      }
+      &__date-item {
+        justify-content: flex-start;
+        padding-left: 10px;
+      }
+      &__address {
+        grid-column: 1;
+        grid-row: 3;
+        padding-left: 10px;
+      }
+    }
+  }
+}

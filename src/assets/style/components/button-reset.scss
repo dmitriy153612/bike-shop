@@ -1,0 +1,20 @@
+.btn-reset {
+  border: 1px solid $color4;
+  background-color: $color2;
+  border-radius: 5px;
+  color: $color4;
+  cursor: pointer;
+  outline: none;
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease;
+  &:focus {
+    border-color: $color1;
+  }
+  @media (min-width: $hover-min-width) {
+    &:hover {
+      border-color: $color1;
+      color: $color1;
+    }
+  }
+}

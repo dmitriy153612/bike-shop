@@ -1,0 +1,90 @@
+.app-input {
+  &__inner {
+    position: relative;
+  }
+  &__input {
+    border: 2px solid $color5;
+    padding: 6px;
+    width: 100%;
+    outline: none;
+  }
+  &__label {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    left: 8px;
+    transform: translateY(-50%);
+    line-height: 100%;
+    color: $color5;
+    pointer-events: none;
+    transition-property: color, top, left, font-size;
+    transition-duration: 0.2s;
+    transition-timing-function: ease;
+  }
+  &__label-star {
+    position: absolute;
+    color: $color3;
+    font-size: 1.4em;
+  }
+  &__input:disabled {
+    color: $color5;
+    font-weight: 600;
+    cursor: not-allowed;
+  }
+  &__input.number {
+    text-align: right;
+  }
+
+  &__input.focus + &__label {
+    top: 0px;
+    left: 8px;
+    color: $color5;
+    font-size: 12px;
+
+    width: max-content;
+    background-color: $color4;
+  }
+
+  &__input.focus {
+    border-color: $color1;
+  }
+  &__input.password {
+    padding-right: 20px;
+  }
+
+  &__eye-btn {
+    position: absolute;
+    top: 50%;
+    right: 5px;
+    border: none;
+    display: flex;
+    padding: 0;
+    transform: translateY(-50%);
+    background-color: transparent;
+    cursor: pointer;
+    & svg {
+      width: 14px;
+      height: 14px;
+      width: 0.8em;
+      height: 0.8em;
+      stroke: $color5;
+      transition: stroke 0.2s ease;
+    }
+    & svg.show {
+      stroke: $color2;
+    }
+  }
+  &__error {
+    display: none;
+    padding-top: 2px;
+    font-size: 12px;
+    line-height: 100%;
+    color: $color3;
+  }
+  &.error &__error {
+    display: block;
+  }
+  &.error &__input {
+    border-color: $color3;
+  }
+}

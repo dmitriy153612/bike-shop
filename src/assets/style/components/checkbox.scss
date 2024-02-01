@@ -1,0 +1,42 @@
+.checkbox {
+  display: flex;
+  flex-wrap: wrap;
+  user-select: none;
+  transition: color 0.2s ease;
+  &__input {
+    position: absolute;
+    transform: scale(0);
+    opacity: 0;
+  }
+  &__label-descr {
+    transition: color 0.2s ease;
+    padding-left: 4px;
+  }
+  &__input:focus + &__label &__label-descr {
+    color: $color1;
+  }
+  &__input:focus + &__label &__label-checkbox {
+    border-color: $color1;
+  }
+  &__input:checked + &__label &__label-checkbox {
+    color: $color1;
+  }
+  &__label {
+    position: relative;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  &__label-checkbox {
+    border: 1px solid $color5;
+    border-radius: 4px;
+    display: inline-flex;
+    justify-content: center;
+    height: 22px;
+    width: 22px;
+    color: transparent;
+    transition-property: color, border-color;
+    transition-duration: 0.2s;
+    transition-timing-function: ease;
+    font-size: 18px;
+  }
+}

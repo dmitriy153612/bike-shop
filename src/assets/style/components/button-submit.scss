@@ -1,0 +1,44 @@
+.btn-submit {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  border: 2px solid $color1;
+  border-radius: 5px;
+  padding: 7px 15px;
+  font-size: 18px;
+  font-weight: 500;
+  background-color: $color1;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  transition-property: color, background-color, border-color;
+  transition-duration: 0.2s;
+  transition-timing-function: ease;
+  outline: none;
+  text-decoration: none;
+  &.spinner {
+    pointer-events: none;
+    user-select: none;
+    color: transparent;
+  }
+  &:visited {
+    color: inherit;
+  }
+  & svg {
+    height: 1.2em;
+    width: 1.2em;
+  }
+  &:focus {
+    color: $color3;
+  }
+  @media (min-width: $hover-min-width) {
+    &:hover {
+      background-color: $color2;
+      color: $color1;
+    }
+  }
+  &:active {
+    color: $color3;
+  }
+}

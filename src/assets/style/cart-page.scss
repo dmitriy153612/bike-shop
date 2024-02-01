@@ -1,0 +1,225 @@
+.cart-sec {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  column-gap: 25px;
+  &__title {
+    grid-column: 1 / 3;
+  }
+  &__message {
+    justify-self: center;
+  }
+  &__selection {
+    position: sticky;
+    top: 55px;
+    z-index: 3;
+    grid-column: 1 / 3;
+    display: flex;
+    align-items: center;
+    column-gap: 25px;
+    margin-bottom: 40px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    background-color: $color4;
+    box-shadow: 0 0 0 100vmax $color4;
+    clip-path: inset(0 -100vmax);
+  }
+  &__list {
+    grid-column: 1 / 2;
+    display: grid;
+    row-gap: 25px;
+  }
+  &__order-form {
+    position: sticky;
+    top: 120px;
+  }
+  &__user-data-form {
+    grid-row: 1 / 2;
+  }
+  .btn-cross {
+    &__cross {
+      height: 20px;
+      width: 20px;
+    }
+  }
+}
+.order-form {
+  &__priceDifference .option-descr__value {
+    color: $color3;
+  }
+}
+
+.cart-product {
+  position: relative;
+  display: grid;
+  gap: 15px;
+  grid-template-areas:
+    'checkbox link title counter price'
+    'checkbox link attrs discount discount';
+  grid-template-columns: 30px minmax(180px, 300px) minmax(200px, 1fr) max-content 114px;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0px 0px 9px 3px rgba(0, 0, 0, 0.32);
+  transition: box-shadow 0.2s ease;
+
+  &:focus-within {
+    box-shadow: 0px 0px 9px 5px rgba(0, 0, 0, 0.5);
+  }
+  @media (min-width: $hover-min-width) {
+    &:hover {
+      box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.32);
+    }
+  }
+  &__descr {
+    width: fit-content;
+  }
+  &__checkbox {
+    grid-area: checkbox;
+    align-self: center;
+    height: 16px;
+    width: 16px;
+  }
+  &__link {
+    grid-area: link;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 100%;
+    height: 100%;
+    overflow-y: hidden;
+    outline: 1px solid transparent;
+    transition: outline 0.2s ease;
+    aspect-ratio: 300 / 170;
+  }
+  &__link:focus {
+    outline-color: $color1;
+  }
+  &__img {
+    display: block;
+    object-fit: contain;
+    max-height: 100%;
+    max-width: 100%;
+    width: 100%;
+  }
+  &__title {
+    grid-area: title;
+    margin: 0;
+  }
+  &__attrs {
+    grid-area: attrs;
+    align-self: flex-end;
+    max-width: 100%;
+  }
+  &__counter {
+    grid-area: counter;
+  }
+  &__price {
+    grid-area: price;
+    display: grid;
+    gap: 5px;
+    align-self: flex-start;
+  }
+  &__discount {
+    grid-area: discount;
+    justify-self: flex-end;
+    align-self: flex-end;
+    width: fit-content;
+  }
+  &__discount .option-descr__value {
+    color: $color3;
+  }
+  &__spinner {
+    position: absolute;
+  }
+}
+
+@media (max-width: 1024px) {
+  .cart-product {
+    grid-template-areas:
+      'checkbox title price'
+      'checkbox link counter'
+      'checkbox link attrs'
+      'checkbox link discount';
+    grid-template-columns: 22px minmax(180px, 410px) minmax(144px, 1fr);
+    grid-template-rows: auto auto auto 1fr;
+    &__link {
+      max-height: 120px;
+    }
+    &__title {
+      font-size: 20px;
+    }
+    &__discount .option-descr__name {
+      display: none;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .cart-sec {
+    grid-template-columns: 1fr;
+    &__title {
+      grid-column: 1;
+    }
+    &__selection {
+      grid-column: 1;
+    }
+    &__list {
+      grid-column: 1;
+      margin-bottom: 30px;
+    }
+    &__aside {
+      grid-column: 1;
+      justify-self: center;
+    }
+  }
+  .cart-product {
+    position: relative;
+    grid-template-columns: minmax(180px, 410px) minmax(144px, 1fr);
+    grid-template-rows: auto auto 1fr;
+    grid-template-areas:
+      'link title price'
+      'link attrs counter '
+      'link discount discount ';
+    padding: 12px;
+    &__checkbox {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+    }
+    &__discount .option-descr__name {
+      display: flex;
+    }
+  }
+}
+
+@media (max-width: 568px) {
+  .cart-product {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto auto 1fr;
+    grid-template-areas:
+      'title title'
+      'link link'
+      'price attrs'
+      'counter counter'
+      'discount discount ';
+    gap: 4px;
+
+    &__title {
+      justify-self: center;
+      padding-left: 30px;
+    }
+    &__link {
+      justify-self: center;
+      max-height: 140px;
+    }
+    &__attrs {
+      justify-self: center;
+      align-self: flex-start;
+    }
+    &__price {
+      justify-self: center;
+    }
+    &__counter {
+      justify-self: center;
+    }
+  }
+}
