@@ -1,16 +1,22 @@
 .select {
   position: relative;
+  font-size: 16px;
   cursor: pointer;
   background-color: $color2;
   color: $color4;
 
   &__placeholder,
   &__item {
-    padding: 4px 24px 4px 8px;
     min-width: max-content;
     transition-property: background-color, color, box-shadow, border-color;
     transition-duration: 0.2s;
     transition-timing-function: ease;
+  }
+  &__placeholder {
+    padding: 8px 32px 8px 12px;
+  }
+  &__item {
+    padding: 16px 32px 16px 12px;
   }
   &__placeholder {
     position: relative;
@@ -63,11 +69,11 @@
   &__triangle {
     position: absolute;
     top: 50%;
-    right: 4px;
+    right: 8px;
     width: 0;
     height: 0;
     border-style: solid;
-    border-width: 7px 6px 0 6px;
+    border-width: 9px 8px 0 8px;
     border-color: $color5 transparent transparent transparent;
     transform: translateY(-50%);
     transition-property: transform border-color;
