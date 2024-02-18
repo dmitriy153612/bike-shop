@@ -19,7 +19,9 @@ html,
 body {
   min-height: 100%;
   font-family: Arial, Helvetica, sans-serif;
-  padding: 0 calc(17px - (100vw - 100%)) 0 0;
+}
+body {
+  overflow-y: scroll;
 }
 
 .app {

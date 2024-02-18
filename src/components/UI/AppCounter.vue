@@ -12,7 +12,7 @@
       :aria-valuemax="99"
       :aria-label="`количество товара ${currentAmount}`"
     >
-    {{ amount }}
+      {{ amount }}
     </div>
 
     <button

@@ -2,6 +2,16 @@
   <div class="header-wrapper">
     <header class="section header">
       <div class="header__inner">
+        <button
+          class="btn-filter"
+          v-if="route.name === 'catalog'"
+          aria-label="Открыть фильтр товаров"
+          @click.prevent="globalStore.toggleFilter"
+        >
+          <svg class="icon">
+            <use xlink:href="#filter" />
+          </svg>
+        </button>
         <router-link
           v-show="route.name != 'catalog'"
           class="header__catalog-link"

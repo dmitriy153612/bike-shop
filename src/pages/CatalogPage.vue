@@ -1,7 +1,7 @@
 <template>
   <app-section class="catalog-sec">
     <app-title class="catalog-sec__title"> Mountain bikes </app-title>
-    <transition name="appear-left">
+    <transition :name="windowInnerWidth > 1024 ? 'appear-left' : 'appear'">
       <catalog-filter
         v-if="isFilterLoaded"
         class="catalog-sec__filter"
@@ -56,7 +56,7 @@ import setQueryToFilter from '@/helpers/setQueryToFilter'
 import AppSelect from '@/components/UI/AppSelect.vue'
 import { useCatalogStore } from '@/stores/catalogStore'
 import { useFilterStore } from '@/stores/filterSore'
-import { computed, ref, watchEffect, watch } from 'vue'
+import { computed, ref, watchEffect, watch, onUnmounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import {
   type FilterParams,
@@ -114,9 +114,16 @@ const totalPages = computed<number>(() => {
   return 0
 })
 
+const windowInnerWidth = ref<number>(0)
+
 function setSortingId(id: string) {
   sortingId.value = id
 }
+
+function setWindowInnerWidth() {
+  windowInnerWidth.value = window.innerWidth
+}
+setWindowInnerWidth()
 
 watchEffect(() => {
   if (route.name === 'catalog') {
@@ -152,4 +159,6 @@ watch(
   },
   { immediate: true }
 )
+window.addEventListener('resize', setWindowInnerWidth)
+onUnmounted(() => window.removeEventListener('resize', setWindowInnerWidth))
 </script>

@@ -1,9 +1,5 @@
 <template>
-  <div
-    ref="selectEl"
-    class="select"
-    :class="{ open: isSelectOpen }"
-  >
+  <div ref="selectEl" class="select" :class="{ open: isSelectOpen }">
     <div
       ref="placeholderEl"
       class="select-placeholder select__placeholder"
@@ -14,14 +10,8 @@
       {{ selectedItemLabel || placeholder }}
       <span class="select-placeholder__triangle" />
     </div>
-    <div
-      ref="listWrapperEl"
-      class="select__list-wrapper"
-    >
-      <ul
-        ref="listEl"
-        class="select__list"
-      >
+    <div ref="listWrapperEl" class="select__list-wrapper">
+      <ul ref="listEl" class="select__list">
         <li
           v-for="(prop, index) in properties"
           :key="index"
@@ -140,7 +130,6 @@ function setInitialLabel() {
     }
   }
 }
-
 
 onMounted(() => {
   setSizeToSelect()

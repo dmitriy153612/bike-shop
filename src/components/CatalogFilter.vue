@@ -1,50 +1,34 @@
 <template>
-  <aside ref="filterWrapperElem" class="filter-wrapper">
-    <button
-      class="filter-wrapper__btn-open"
-      aria-label="Открыть фильтр товаров"
-      @click.prevent="openFilter"
-    >
-      <svg class="icon">
-        <use xlink:href="#filter" />
-      </svg>
-    </button>
-    <transition name="appear-left">
-      <form
-        v-if="showFilter"
-        ref="filterElem"
-        class="filter filter-wrapper__filter"
-        @submit.prevent="setFilterToRoute"
-      >
-        <app-button-cross
-          class="filter__btn-close"
-          aria-label="Закрыть фильтр товаров"
-          @click.prevent="openFilter"
-        />
-        <div class="filter__inner">
-          <h2 class="filter__title">Фильтр</h2>
-          <catalog-filter-fieldset v-if="brands.length" class="filter__brand" legend="Бренд">
-            <catalog-filter-checkbox-list v-model="filterParams.brandId" :properties="brands" />
-          </catalog-filter-fieldset>
-          <catalog-filter-fieldset v-if="sizes.length" class="filter__size" legend="Размер">
-            <catalog-filter-checkbox-list v-model="filterParams.sizeId" :properties="sizes" />
-          </catalog-filter-fieldset>
-          <catalog-filter-fieldset v-if="colors.length" class="filter__color" legend="Цвет">
-            <catalog-filter-checkbox-list v-model="filterParams.colorId" :properties="colors" />
-          </catalog-filter-fieldset>
-          <div class="filter__price-box">
-            <app-input v-model="filterParams.minPrice" input-type="number" label="Цена от" />
-            <app-input v-model="filterParams.maxPrice" input-type="number" label="Цена до" />
-          </div>
-          <app-button-submit class="filter__btn-submit" btn-name="Применить" />
-          <app-button-reset
-            class="filter__btn-reset"
-            btn-name="Сбросить"
-            @click.prevent="resetFilter"
-          />
+  <aside class="filter-wrapper" v-if="showFilter" @click.prevent="globalStore.toggleFilter">
+    <form class="filter filter-wrapper__filter" @submit.prevent="setFilterToRoute" @click.stop>
+      <app-button-cross
+        class="filter__btn-close"
+        aria-label="Закрыть фильтр товаров"
+        @click.stop.prevent="globalStore.toggleFilter"
+      />
+      <div class="filter__inner">
+        <h2 class="filter__title">Фильтр</h2>
+        <catalog-filter-fieldset v-if="brands.length" class="filter__brand" legend="Бренд">
+          <catalog-filter-checkbox-list v-model="filterParams.brandId" :properties="brands" />
+        </catalog-filter-fieldset>
+        <catalog-filter-fieldset v-if="sizes.length" class="filter__size" legend="Размер">
+          <catalog-filter-checkbox-list v-model="filterParams.sizeId" :properties="sizes" />
+        </catalog-filter-fieldset>
+        <catalog-filter-fieldset v-if="colors.length" class="filter__color" legend="Цвет">
+          <catalog-filter-checkbox-list v-model="filterParams.colorId" :properties="colors" />
+        </catalog-filter-fieldset>
+        <div class="filter__price-box">
+          <app-input v-model="filterParams.minPrice" input-type="number" label="Цена от" />
+          <app-input v-model="filterParams.maxPrice" input-type="number" label="Цена до" />
         </div>
-      </form>
-    </transition>
+        <app-button-submit class="filter__btn-submit" btn-name="Применить" />
+        <app-button-reset
+          class="filter__btn-reset"
+          btn-name="Сбросить"
+          @click.prevent="resetFilter"
+        />
+      </div>
+    </form>
   </aside>
 </template>
 
@@ -54,10 +38,11 @@ import CatalogFilterCheckboxList from '@/components/CatalogFilterCheckboxList.vu
 import AppButtonSubmit from '@/components/UI/AppButtonSubmit.vue'
 import AppButtonReset from '@/components/UI/AppButtonReset.vue'
 import AppButtonCross from '@/components/UI/AppButtonCross.vue'
-import { type PropType, onMounted, onUnmounted, ref } from 'vue'
+import { type PropType, onMounted, onUnmounted, ref, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import setQueryToFilter from '@/helpers/setQueryToFilter'
 import AppInput from '@/components/UI/AppInput.vue'
+import { useGlobalStore } from '@/stores/globalStore'
 import {
   type Size,
   type Brand,
@@ -73,10 +58,9 @@ defineProps({
 
 const route = useRoute()
 const router = useRouter()
+const globalStore = useGlobalStore()
 
-const filterElem = ref(null)
-const filterWrapperElem = ref(null)
-const showFilter = ref(true)
+const showFilter = computed<boolean>(() => globalStore.isFilterOpen)
 
 const filterParams = ref<FilterParams>({
   colorId: [],
@@ -98,7 +82,7 @@ function resetFilter() {
   }
 
   updateRoute(filterParams.value)
-  openFilter()
+  globalStore.toggleFilter()
 }
 
 function updateRoute(params: FilterParams) {
@@ -124,26 +108,19 @@ function setFilterToRoute() {
   const updatedParams = { ...params, page: 1 } as FilterParams
 
   updateRoute(updatedParams)
-  openFilter()
+  globalStore.toggleFilter()
 }
 
 setQueryToFilter(route.query, filterParams)
 
 function hideFilter() {
   if (window.innerWidth <= 1024) {
-    showFilter.value = false
+    globalStore.toggleFilter(false)
   } else {
-    showFilter.value = true
+    globalStore.toggleFilter(true)
   }
 }
 hideFilter()
-
-function openFilter() {
-  if (window.innerWidth > 1024) {
-    return
-  }
-  showFilter.value = !showFilter.value
-}
 
 onMounted(() => {
   addEventListener('resize', hideFilter)
@@ -153,3 +130,5 @@ onUnmounted(() => {
   removeEventListener('resize', hideFilter)
 })
 </script>
+
+<style lang="scss"></style>
