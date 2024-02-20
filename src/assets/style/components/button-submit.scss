@@ -42,3 +42,9 @@
     color: $color3;
   }
 }
+
+@media (max-width: 1024px) {
+  .btn-submit {
+    font-size: 22px;
+  }
+}

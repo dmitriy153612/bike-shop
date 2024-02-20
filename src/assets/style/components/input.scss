@@ -7,6 +7,7 @@
     padding: 6px;
     width: 100%;
     outline: none;
+    overflow-x: hidden;
   }
   &__label {
     position: absolute;
@@ -36,7 +37,7 @@
   }
 
   &__input.focus + &__label {
-    top: 0px;
+    top: -8px;
     left: 8px;
     color: $color5;
     font-size: 12px;
@@ -86,5 +87,17 @@
   }
   &.error &__input {
     border-color: $color3;
+  }
+}
+
+@media (max-width: 1024px) {
+  .app-input {
+    &__input {
+      font-size: 20px;
+    }
+    &__input.focus + &__label {
+      top: -10px;
+      font-size: 14px;
+    }
   }
 }

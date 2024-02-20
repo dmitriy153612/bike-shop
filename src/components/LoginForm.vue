@@ -71,7 +71,6 @@ async function login(): Promise<void> {
   if (emailError.value || passwordError.value) {
     return
   }
-  console.log(123)
   await loginStore.fetchLogin({
     email: email.value.toLowerCase(),
     password: password.value

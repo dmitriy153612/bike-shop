@@ -5,7 +5,7 @@ export const useGlobalStore = defineStore('globalStore', () => {
   const isLoginModalOpen = ref<boolean>(false)
   const isMainSpinnerShown = ref<boolean>(false)
   const isSelectedCartItemAmountChanging = ref<number>(0)
-  const isFilterOpen = ref<boolean>(false)
+  const isfilterOpen = ref<boolean>(true)
 
   function openLoginModal(isOpen: boolean): void {
     isLoginModalOpen.value = isOpen
@@ -19,19 +19,11 @@ export const useGlobalStore = defineStore('globalStore', () => {
     isSelectedCartItemAmountChanging.value += value
   }
 
-  function toggleFilter(value: boolean | undefined = undefined) {
-    if (value === false || value === true) {
-      isFilterOpen.value = value
+  function toggleFilter(isOpen: boolean | undefined = undefined) {
+    if (isOpen === true || isOpen === false) {
+      isfilterOpen.value = isOpen
     } else {
-      if (window.innerWidth > 1024) {
-        return
-      }
-      isFilterOpen.value = !isFilterOpen.value
-    }
-    if (isFilterOpen.value && window.innerWidth < 1024) {
-      document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.overflow = ''
+      isfilterOpen.value = !isfilterOpen.value
     }
   }
 
@@ -45,7 +37,7 @@ export const useGlobalStore = defineStore('globalStore', () => {
     isSelectedCartItemAmountChanging,
     updateIsSelectedCartItemAmountChanging,
 
-    isFilterOpen,
+    isfilterOpen,
     toggleFilter
   }
 })

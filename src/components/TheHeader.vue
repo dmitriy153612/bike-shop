@@ -4,6 +4,7 @@
       <div class="header__inner">
         <button
           class="btn-filter"
+          id="btn-filter"
           v-if="route.name === 'catalog'"
           aria-label="Открыть фильтр товаров"
           @click.prevent="globalStore.toggleFilter"

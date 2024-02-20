@@ -134,7 +134,6 @@ const showFormSpinner = computed(() => {
 })
 
 const debounceFetchSelectCartProducts = debounce(({ cartItemIds: newValue }) => {
-  console.log(newValue)
   cartStore.fetchSelectCartProducts(newValue)
 })
 

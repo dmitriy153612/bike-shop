@@ -1,9 +1,9 @@
 <template>
   <app-section class="catalog-sec">
     <app-title class="catalog-sec__title"> Mountain bikes </app-title>
-    <transition :name="windowInnerWidth > 1024 ? 'appear-left' : 'appear'">
+    <transition :name="filterTransitionType">
       <catalog-filter
-        v-if="isFilterLoaded"
+        v-if="isFilterLoaded && globalStore.isfilterOpen"
         class="catalog-sec__filter"
         :colors="filterSore.colors"
         :sizes="filterSore.sizes"
@@ -21,7 +21,6 @@
         @select="setSortingId"
       />
     </transition>
-
     <transition name="appear">
       <catalog-counter
         v-if="isCatalogLoaded"
@@ -29,6 +28,7 @@
         :amount="totalProductsAmount"
       />
     </transition>
+    <div></div>
 
     <transition name="appear">
       <catalog-list
@@ -56,7 +56,9 @@ import setQueryToFilter from '@/helpers/setQueryToFilter'
 import AppSelect from '@/components/UI/AppSelect.vue'
 import { useCatalogStore } from '@/stores/catalogStore'
 import { useFilterStore } from '@/stores/filterSore'
+import { useGlobalStore } from '@/stores/globalStore'
 import { computed, ref, watchEffect, watch, onUnmounted } from 'vue'
+import { lockScroll } from '@/helpers/lockScroll'
 import { useRouter, useRoute } from 'vue-router'
 import {
   type FilterParams,
@@ -68,6 +70,7 @@ const route = useRoute()
 const router = useRouter()
 const filterSore = useFilterStore()
 const catalogStore = useCatalogStore()
+const globalStore = useGlobalStore()
 
 const sortingId = ref<string>('')
 const catalogParams = ref<FilterParams>({
@@ -114,16 +117,35 @@ const totalPages = computed<number>(() => {
   return 0
 })
 
-const windowInnerWidth = ref<number>(0)
+const currentOffsetWidth = ref<number>(0)
+const iscurrentOffsetWidthGreater1024 = ref(!(Number(document.body.offsetWidth) > 1024))
+
+const filterTransitionType = computed(() => {
+  if (currentOffsetWidth.value > 1024) {
+    return 'appear-left'
+  }
+  return 'appear'
+})
 
 function setSortingId(id: string) {
   sortingId.value = id
 }
 
-function setWindowInnerWidth() {
-  windowInnerWidth.value = window.innerWidth
+function toggleFilterByResize() {
+  currentOffsetWidth.value = Number(document.body.offsetWidth)
+  if (currentOffsetWidth.value > 1024 && !iscurrentOffsetWidthGreater1024.value) {
+    globalStore.toggleFilter(true)
+    console.log('a lot')
+    iscurrentOffsetWidthGreater1024.value = true
+  } else if (currentOffsetWidth.value <= 1024 && iscurrentOffsetWidthGreater1024.value) {
+    globalStore.toggleFilter(false)
+    console.log('a little')
+    iscurrentOffsetWidthGreater1024.value = false
+  }
 }
-setWindowInnerWidth()
+toggleFilterByResize()
+
+window.addEventListener('resize', toggleFilterByResize)
 
 watchEffect(() => {
   if (route.name === 'catalog') {
@@ -134,6 +156,17 @@ watchEffect(() => {
     catalogStore.fetchCatalog(catalogParams.value)
   }
 })
+
+watch(
+  () => globalStore.isfilterOpen,
+  (newValue) => {
+    if (newValue && currentOffsetWidth.value <= 1024) {
+      lockScroll(true)
+    } else {
+      lockScroll(false)
+    }
+  }
+)
 
 watch(
   () => sortingId.value,
@@ -159,6 +192,7 @@ watch(
   },
   { immediate: true }
 )
-window.addEventListener('resize', setWindowInnerWidth)
-onUnmounted(() => window.removeEventListener('resize', setWindowInnerWidth))
+onUnmounted(() => {
+  window.removeEventListener('resize', toggleFilterByResize)
+})
 </script>
