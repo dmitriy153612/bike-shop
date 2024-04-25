@@ -1,40 +1,35 @@
 <template>
-  <aside
-    class="filter-wrapper"
-    @click.self="globalStore.toggleFilter"
-    @keyup.esc="closeFilterByEsc"
-  >
-    <div class="filter-wrapper__div" ref="filterElem">
-      <app-button-cross
-        class="filter-wrapper__btn-close"
+  <div class="filter" @click.self="closeFilter">
+    <div class="filter__inner" ref="filterElem">
+      <button-cross
+        class="filter__btn-close"
         aria-label="Закрыть фильтр товаров"
         ref="btnCloseElem"
-        v-focus
-        @click.prevent="globalStore.toggleFilter"
+        @click.prevent="closeFilter"
       />
-      <form class="filter filter-wrapper__filter">
-        <div class="filter__inner">
+      <form class="filter__form" @submit.prevent="setFilterToRoute">
+        <div class="filter__form-inner">
           <h2 class="filter__title">Фильтр</h2>
           <catalog-filter-fieldset v-if="brands.length" class="filter__brand" legend="Бренд">
-            <catalog-filter-checkbox-list v-model="filterParams.brandId" :properties="brands" />
+            <checkbox-list v-model="filterParams.brandId" :properties="brands" />
           </catalog-filter-fieldset>
           <catalog-filter-fieldset v-if="sizes.length" class="filter__size" legend="Размер">
-            <catalog-filter-checkbox-list v-model="filterParams.sizeId" :properties="sizes" />
+            <checkbox-list v-model="filterParams.sizeId" :properties="sizes" />
           </catalog-filter-fieldset>
           <catalog-filter-fieldset v-if="colors.length" class="filter__color" legend="Цвет">
-            <catalog-filter-checkbox-list v-model="filterParams.colorId" :properties="colors" />
+            <checkbox-list v-model="filterParams.colorId" :properties="colors" />
           </catalog-filter-fieldset>
           <div class="filter__price-box">
             <app-input v-model="filterParams.minPrice" input-type="number" label="Цена от" />
             <app-input v-model="filterParams.maxPrice" input-type="number" label="Цена до" />
           </div>
-          <app-button-submit
-            type="button"
+          <button-submit
+            type="submit"
             class="filter__btn-submit"
             btn-name="Применить"
             @click.prevent="setFilterToRoute"
           />
-          <app-button-reset
+          <button-reset
             class="filter__btn-reset"
             btn-name="Сбросить"
             @click.prevent="resetFilter"
@@ -42,25 +37,27 @@
         </div>
       </form>
     </div>
-  </aside>
+  </div>
 </template>
 
 <script lang="ts" setup>
 import CatalogFilterFieldset from '@/components/CatalogFilterFieldset.vue'
-import CatalogFilterCheckboxList from '@/components/CatalogFilterCheckboxList.vue'
-import AppButtonSubmit from '@/components/UI/AppButtonSubmit.vue'
-import AppButtonReset from '@/components/UI/AppButtonReset.vue'
-import AppButtonCross from '@/components/UI/AppButtonCross.vue'
-import { type PropType, ref, onUnmounted, onMounted } from 'vue'
+import CheckboxList from '@/components/CheckboxList.vue'
+import ButtonSubmit from '@/components/ButtonSubmit.vue'
+import ButtonReset from '@/components/ButtonReset.vue'
+import ButtonCross from '@/components/ButtonCross.vue'
+import { lockScroll } from '@/helpers/lockScroll'
+import { type PropType, ref, watch, onUnmounted, nextTick } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import setQueryToFilter from '@/helpers/setQueryToFilter'
-import AppInput from '@/components/UI/AppInput.vue'
+import { useGetQueryFromRoute } from '@/composables/getCatalogQueries'
+import AppInput from '@/components/AppInput.vue'
 import { useGlobalStore } from '@/stores/globalStore'
 import {
   type Size,
   type Brand,
   type Color,
-  type FilterParams
+  type FilterParams,
+  type CatalogPageParams
 } from '@/interfaces/CatalogInterfaces'
 
 defineProps({
@@ -73,7 +70,9 @@ const route = useRoute()
 const router = useRouter()
 const globalStore = useGlobalStore()
 
-const filterParams = ref<FilterParams>({
+const { getAllCatalogQueries } = useGetQueryFromRoute()
+
+const filterParams = ref<CatalogPageParams>({
   colorId: [],
   sizeId: [],
   brandId: [],
@@ -97,14 +96,14 @@ function resetFilter() {
   updateRoute(filterParams.value)
 }
 
-function updateRoute(params: FilterParams) {
+function updateRoute(params: CatalogPageParams) {
   router.replace({
     query: {
       ...route.query,
       ...params
     }
   })
-  globalStore.toggleFilter(false)
+  closeFilter()
 }
 
 function setFilterToRoute() {
@@ -112,13 +111,13 @@ function setFilterToRoute() {
   Object.keys(filterParams.value).forEach((key) => {
     const value = filterParams.value[key as keyof FilterParams]
     if (Array.isArray(value) || (typeof value === 'number' && value > 0) || value === undefined) {
-      params[key as keyof FilterParams] = value
+      params[key as keyof CatalogPageParams] = value
     }
     if (value === 0) {
-      params[key as keyof FilterParams] = undefined
+      params[key as keyof CatalogPageParams] = undefined
     }
   })
-  const updatedParams = { ...params, page: 1 } as FilterParams
+  const updatedParams: CatalogPageParams = { ...params, page: 1 } as CatalogPageParams
 
   updateRoute(updatedParams)
 }
@@ -130,31 +129,145 @@ function setFocusOnBtnOpenFilter() {
   }
 }
 
-function closeFilterByEsc() {
+function closeFilter() {
   const offsetWidth = Number(document.body.offsetWidth)
   if (offsetWidth > 1024) {
     return
   }
-  globalStore.toggleFilter(false)
+  lockScroll(false)
+  globalStore.toggleFilter()
+  document.removeEventListener('focusin', handleFocusIn)
+  setFocusOnBtnOpenFilter()
 }
 
-setQueryToFilter(route.query, filterParams)
-
-function handleFocusIn(event: FocusEvent): void {
-  if (filterElem.value && !filterElem.value.contains(event.target as HTMLElement)) {
-    event.preventDefault()
-    if (btnCloseElem.value && 'element' in btnCloseElem.value) {
-      const btnClose: HTMLElement = btnCloseElem.value.element as HTMLElement
-      btnClose.focus()
-    }
+function closeFilterByEsc(event: KeyboardEvent) {
+  if (event.key === 'Escape') {
+    closeFilter()
   }
 }
 
-onMounted(() => document.addEventListener('focusin', handleFocusIn))
+function setQueryToFilter() {
+  filterParams.value = getAllCatalogQueries.value
+}
 
-onUnmounted(() => {
-  setFocusOnBtnOpenFilter()
-})
+setQueryToFilter()
+
+function focusBtnClose() {
+  if (btnCloseElem.value && 'element' in btnCloseElem.value) {
+    const btnClose: HTMLElement = btnCloseElem.value.element as HTMLElement
+    nextTick(() => {
+      btnClose.focus()
+    })
+  }
+}
+
+function handleFocusIn(event: FocusEvent): void {
+  if (filterElem.value && !filterElem.value.contains(event.target as HTMLElement)) {
+    focusBtnClose()
+  }
+}
+
+watch(
+  () => route.query,
+  () => {
+    setQueryToFilter()
+  }
+)
+
+watch(
+  () => globalStore.isfilterOpen,
+  (newValue) => {
+    if (newValue) {
+      document.addEventListener('focusin', handleFocusIn)
+      focusBtnClose()
+    } else {
+      document.removeEventListener('focusin', handleFocusIn)
+    }
+  }
+)
+
+document.addEventListener('keydown', closeFilterByEsc)
+
+onUnmounted(() => document.removeEventListener('keydown', closeFilterByEsc))
 </script>
 
-<style lang="scss"></style>
+<style lang="scss" scoped>
+@import '@/assets/style/config/variables.scss';
+
+.filter {
+  @media #{$screen-huge} {
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    display: flex;
+    padding-top: 70px;
+    padding-left: 20px;
+    background-color: rgba(0, 0, 0, 0.6);
+    overflow-y: auto;
+  }
+
+  &__inner {
+    position: relative;
+  }
+
+  &__btn-close {
+    display: none;
+
+    @media #{$screen-huge} {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      display: block;
+    }
+  }
+
+  &__form {
+    @media #{$screen-huge} {
+      height: max-content;
+      padding-bottom: 50px;
+    }
+  }
+
+  &__form-inner {
+    width: 100%;
+    display: grid;
+    align-self: flex-start;
+    background-color: $black;
+    align-content: flex-start;
+    gap: 15px;
+    padding: 15px;
+    color: $white;
+    outline: 1px solid $white;
+  }
+
+  &__title {
+    margin: 0;
+
+    @media #{$screen-huge} {
+      grid-column: 1 / 3;
+    }
+  }
+
+  &__price-box {
+    display: grid;
+    gap: 20px;
+    padding-top: 15px;
+
+    @media #{$screen-huge} {
+      grid-column: 1 / 3;
+    }
+  }
+
+  &__btn-submit {
+    @media #{$screen-huge} {
+      grid-column: 1 / 3;
+    }
+  }
+
+  &__btn-reset {
+    @media #{$screen-huge} {
+      grid-column: 1 / 3;
+    }
+  }
+}
+</style>

@@ -1,91 +1,67 @@
 <template>
-  <app-section class="order-sec">
-    <app-title class="order-sec__title">
-      {{ mainTitle }}
-    </app-title>
-    <template v-if="!orderListProducts.length && !orderStore.isGetOrderLoading">
-      <p class="order-message-text">Товары для заказа не выбраны.</p>
-    </template>
+  <page-structure :title="mainTitle" :breadcrumbs="breadcrumbs">
+    <div class="order-page">
+      <section class="order-page__sec">
+        <app-container class="order-page__container">
+          <template v-if="!orderListProducts.length && !orderStore.isGetOrderLoading">
+            <p class="order-page__message-text">Товары для заказа не выбраны.</p>
+          </template>
 
-    <template v-if="orderStore.completeOrderNumber">
-      <p class="order-message-text">
-        Заказ
-        <strong class="order-success-text__span">№{{ orderStore.completeOrderNumber }}</strong>
-        успешно создан!
-        <br />
-        В течение часа наш оператор свяжется с Вами для подтверждения заказа.
-      </p>
-    </template>
+          <template v-if="orderStore.completeOrderNumber">
+            <p class="order-page__message-text">
+              Заказ
+              <strong>№{{ orderStore.completeOrderNumber }}</strong>
+              успешно создан!
+              <br />
+              В течение часа наш оператор свяжется с Вами для подтверждения заказа.
+            </p>
+          </template>
 
-    <template v-if="!orderStore.completeOrderNumber && orderListProducts.length">
-      <div class="order-placing">
-        <order-switcher
-          v-model="selectedDeliveryTypeId"
-          class="order-placing__switcher"
-          legend="Способ получения"
-          name="receiving"
-          :property-list="deliveryTypesList"
-        />
-        <order-pickup-addresses
-          v-if="getDeliveryTypeName === 'pickup'"
-          id="order-placing__pickup"
-          v-model="selectedPickupAddressId"
-          class="order-placing__pickup"
-          :pickup-list="pickupPointsList"
-        />
-        <order-delivery-address
-          v-if="getDeliveryTypeName === 'delivery'"
-          id="order-placing__delivery"
-          v-model:deliveryAddress="deliveryAddress"
-          v-model:deliveryAddressErrors="deliveryAddressErrors"
-          class="order-placing__delivery"
-        />
-        <order-user
-          id="order-placing__user"
-          v-model:userData="userData"
-          v-model:userDataErrors="userDataErrors"
-          class="order-placing__user"
-        />
-        <order-switcher
-          v-model="selectedPaymentTypeId"
-          class="order-placing__switcher"
-          legend="Способ оплаты"
-          name="payment"
-          :property-list="paymentTypesList"
-        />
-      </div>
-      <cart-order-form
-        class="order-sec__order-form"
-        :show-delivery="true"
-        :amount="orderStore.orderConfig.selectedAmount"
-        :price-difference="orderStore.orderConfig.totalPriceDifference"
-        :delivery-price="orderStore.orderConfig.deliveryPrice"
-        :old-price="orderStore.orderConfig.totalOldPrice"
-        :price="orderStore.orderConfig.totalPrice"
-        :show-spinner="submitFormSpinner"
-      >
-        <app-button-submit
-          class="order-sec__btn-submit"
-          btn-name="Заказать"
-          @click.prevent="createOrder"
-        />
-      </cart-order-form>
-      <order-list class="order-sec__list-wrapper" :order-list="orderListProducts" />
-    </template>
-  </app-section>
+          <template v-if="!orderStore.completeOrderNumber && orderListProducts.length">
+            <order-placing
+              v-model:selected-delivery-type-id="selectedDeliveryTypeId"
+              :delivery-types-list="deliveryTypesList"
+              :get-delivery-type-name="getDeliveryTypeName"
+              v-model:delivery-address="deliveryAddress"
+              v-model:delivery-address-errors="deliveryAddressErrors"
+              v-model:selected-pickup-address-id="selectedPickupAddressId"
+              :pickup-points-list="pickupPointsList"
+              v-model:user-data="userData"
+              v-model:user-data-errors="userDataErrors"
+              v-model:selected-payment-type-id="selectedPaymentTypeId"
+              :payment-types-list="paymentTypesList"
+            />
+
+            <div class="order-page__right">
+              <cart-order-form
+                :show-delivery="true"
+                :amount="orderStore.orderConfig.selectedAmount"
+                :price-difference="orderStore.orderConfig.totalPriceDifference"
+                :delivery-price="orderStore.orderConfig.deliveryPrice"
+                :old-price="orderStore.orderConfig.totalOldPrice"
+                :price="orderStore.orderConfig.totalPrice"
+                :show-spinner="submitFormSpinner"
+              >
+                <button-submit btn-name="Заказать" @click.prevent="createOrder" />
+              </cart-order-form>
+            </div>
+
+            <order-list class="order-page__list" :order-list="orderListProducts" />
+          </template>
+        </app-container>
+      </section>
+    </div>
+  </page-structure>
 </template>
 
 <script lang="ts" setup>
 import { ref, watch, computed, watchEffect, reactive, type Ref } from 'vue'
-import AppSection from '@/components/common/AppSection.vue'
-import AppTitle from '@/components/common/AppTitle.vue'
+import PageStructure from '@/components/PageStructure.vue'
+import AppContainer from '@/components/AppContainer.vue'
 import CartOrderForm from '@/components/CartOrderForm.vue'
-import AppButtonSubmit from '@/components/UI/AppButtonSubmit.vue'
+import ButtonSubmit from '@/components/ButtonSubmit.vue'
 import OrderList from '@/components/OrderList.vue'
-import OrderPickupAddresses from '@/components/OrderPickupAddresses.vue'
-import OrderDeliveryAddress from '@/components/OrderDeliveryAddress.vue'
-import OrderUser from '@/components/OrderUser.vue'
-import OrderSwitcher from '@/components/OrderSwitcher.vue'
+import OrderPlacing from '@/components/OrderPlacing.vue'
 import { onBeforeRouteLeave } from 'vue-router'
 import { useOrderStore } from '@/stores/orderStore'
 import { useCartStore } from '@/stores/cartStore'
@@ -100,6 +76,21 @@ import {
   type DeliveryAddress,
   type DeliveryPickup
 } from '@/interfaces/OrderInterfaces'
+
+const breadcrumbs = ref([
+  {
+    linkName: 'Каталог',
+    pageName: 'catalog'
+  },
+  {
+    linkName: 'Корзина',
+    pageName: 'cart'
+  },
+  {
+    linkName: 'Оформление заказа',
+    pageName: 'order'
+  }
+])
 
 const orderStore = useOrderStore()
 const cartStore = useCartStore()
@@ -332,4 +323,49 @@ watchEffect(() => {
   }
 })
 </script>
-@/interfaces/OrderInterfaces
+
+<style lang="scss" scoped>
+@import '@/assets/style/config/variables.scss';
+
+.order-page {
+  &__container {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    column-gap: 20px;
+
+    @media #{$screen-huge} {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &__title {
+    grid-column: 1 / 3;
+
+    @media #{$screen-huge} {
+      grid-column: 1;
+    }
+  }
+
+  &__right {
+    position: sticky;
+    top: 120px;
+    align-self: flex-start;
+
+    @media #{$screen-huge} {
+      grid-row: 4;
+      justify-self: center;
+    }
+  }
+
+  &__list {
+    @media #{$screen-huge} {
+      margin-bottom: 20px;
+    }
+  }
+
+  &__message-text {
+    margin: 0;
+    font-size: 22px;
+  }
+}
+</style>

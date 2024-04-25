@@ -24,4 +24,12 @@ defineProps({
   catalog: { type: Array as PropType<Product[]>, required: true }
 })
 </script>
-@/interfaces/ProductInterfaces
+
+<style lang="scss" scoped>
+.catalog {
+  align-self: flex-start;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px;
+}
+</style>

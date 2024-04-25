@@ -2,10 +2,15 @@ export interface FilterParams {
   brandId: string | string[]
   colorId: string | string[]
   sizeId: string | string[]
-  sorting?: string
-  page?: number | string
   maxPrice?: number | string | undefined
   minPrice?: number | string | undefined
+}
+
+export type FilterName = keyof FilterParams
+
+export interface CatalogPageParams extends FilterParams {
+  sorting?: string
+  page?: number | string
   limit?: number | string
 }
 

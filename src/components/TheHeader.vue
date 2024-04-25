@@ -1,55 +1,54 @@
 <template>
-  <div class="header-wrapper">
-    <header class="section header">
+  <header class="header">
+    <app-container>
       <div class="header__inner">
         <button
-          class="btn-filter"
+          class="header__btn-filter"
           id="btn-filter"
           v-if="route.name === 'catalog'"
           aria-label="Открыть фильтр товаров"
-          @click.prevent="globalStore.toggleFilter"
+          @click.prevent="openFilter"
         >
           <svg class="icon">
             <use xlink:href="#filter" />
           </svg>
         </button>
-        <router-link
-          v-show="route.name != 'catalog'"
-          class="header__catalog-link"
-          :to="{ name: 'catalog' }"
-        >
-          Каталог
+        <router-link class="header__catalog-link" :to="{ name: 'catalog' }">
+          Bike-Shop
         </router-link>
         <app-logo class="header__logo" />
 
         <div class="header__user-links">
-          <app-login-btn
+          <header-login-btn
             ref="loginBtnComponentRef"
             svg-id="#user"
             :btn-text="btnLoginText"
             @click.prevent="openModal"
           />
-          <app-cart-link v-if="token" :amount="cartAmount" />
+          <header-cart-link v-if="token" :amount="cartAmount" />
         </div>
       </div>
-    </header>
-    <app-modal
-      :btn-open-modal="loginBtnElem"
-      :show-modal="isLoginModalOpen"
-      @close-modal="closeModal"
-    >
-      <the-login-form />
-    </app-modal>
-  </div>
+    </app-container>
+  </header>
+
+  <app-modal
+    :btn-open-modal="loginBtnElem"
+    :show-modal="isLoginModalOpen"
+    @close-modal="closeModal"
+  >
+    <the-login-form />
+  </app-modal>
 </template>
 
 <script lang="ts" setup>
 import { ref, computed, type Ref, type ComputedRef } from 'vue'
-import AppLogo from '@/components/UI/AppLogo.vue'
-import AppLoginBtn from '@/components/UI/AppLoginBtn.vue'
-import AppCartLink from '@/components/UI/AppCartLink.vue'
-import AppModal from '@/components/common/AppModal.vue'
+import AppContainer from '@/components/AppContainer.vue'
+import AppLogo from '@/components/AppLogo.vue'
+import HeaderLoginBtn from '@/components/HeaderLoginBtn.vue'
+import HeaderCartLink from '@/components/HeaderCartLink.vue'
+import AppModal from '@/components/AppModal.vue'
 import TheLoginForm from '@/components/TheLoginForm.vue'
+import { lockScroll } from '@/helpers/lockScroll'
 import { useLoginStore } from '@/stores/loginStore'
 import { useCartStore } from '@/stores/cartStore'
 import { useGlobalStore } from '@/stores/globalStore'
@@ -80,7 +79,101 @@ loginStore.setUserDataFromLS()
 function closeModal(): void {
   globalStore.openLoginModal(false)
 }
+
 function openModal(): void {
   globalStore.openLoginModal(true)
 }
+
+function openFilter() {
+  lockScroll(true)
+  globalStore.toggleFilter()
+}
 </script>
+
+<style lang="scss" scoped>
+@import '@/assets/style/config/variables.scss';
+
+.header {
+  position: fixed;
+  z-index: 10;
+  top: 0;
+  right: 0;
+  left: 0;
+  padding-right: calc(17px - (100vw - 100%));
+  background-color: $black;
+
+  &__inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 10px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    height: 100%;
+  }
+
+  &__catalog-link {
+    display: flex;
+    border: 1px solid transparent;
+    padding: 1px 4px;
+    font-weight: 600;
+    font-size: 20px;
+    color: $sunglow;
+    transition-property: border-color, color;
+    transition-duration: 0.2s;
+    transition-timing-function: ease;
+
+    @media #{$screen-huge} {
+      display: none;
+    }
+  }
+
+  &__catalog-link:focus {
+    outline: none;
+    border-color: $sunglow;
+  }
+
+  @media #{$hover-min-width} {
+    &__catalog-link:hover {
+      color: $sunglowLighten;
+    }
+  }
+
+  &__btn-filter {
+    display: none;
+
+    @media #{$screen-huge} {
+      display: flex;
+      border: 1px solid transparent;
+      border-radius: 4px;
+      padding: 2px;
+      background-color: $black;
+      transition-property: box-shadow, border-color;
+      transition-duration: 0.2s;
+      transition-timing-function: ease;
+
+      & svg {
+        height: 30px;
+        width: 30px;
+        stroke: $sunglow;
+        transition: stroke 0.2s ease;
+      }
+
+      &:focus {
+        outline: none;
+        border-color: $sunglow;
+        box-shadow: 0px 0px 2px 2px rgba(0, 0, 0, 1);
+      }
+
+      &:active svg {
+        stroke: $grenadier;
+      }
+    }
+  }
+
+  &__user-links {
+    display: flex;
+    gap: 5px;
+  }
+}
+</style>

@@ -1,51 +1,55 @@
 <template>
-  <order-fieldset class="order-delivery" legend="Адрес доставки">
-    <app-input
-      v-model="updatedDeliveryAddres['city']"
-      class="order-delivery__input-city"
-      label="Город"
-      :required="true"
-      :disabled="true"
-      :error="updateddeliveryAddressErrors['city']"
-      @remove-error="updateddeliveryAddressErrors['city'] = ''"
-    />
-    <app-input
-      v-model="updatedDeliveryAddres['street']"
-      class="order-delivery__input-street"
-      label="Улица"
-      :required="true"
-      :error="updateddeliveryAddressErrors['street']"
-      @remove-error="updateddeliveryAddressErrors['street'] = ''"
-    />
-    <app-input
-      v-model="updatedDeliveryAddres['house']"
-      class="order-delivery__input-house"
-      label="Дом"
-      :required="true"
-      :error="updateddeliveryAddressErrors['house']"
-      @remove-error="updateddeliveryAddressErrors['house'] = ''"
-    />
-    <app-input
-      v-model="updatedDeliveryAddres['building']"
-      class="order-delivery__input-building"
-      label="Кор."
-      :error="updateddeliveryAddressErrors['building']"
-      @remove-error="updateddeliveryAddressErrors['building'] = ''"
-    />
-    <app-input
-      v-model="updatedDeliveryAddres['appartment']"
-      class="order-delivery__input-appartment"
-      label="Кв."
-      :error="updateddeliveryAddressErrors['appartment']"
-      @remove-error="updateddeliveryAddressErrors['appartment'] = ''"
-    />
-  </order-fieldset>
+  <ul class="order-delivery">
+    <li class="order-delivery__item order-delivery__item--city">
+      <app-input
+        v-model="updatedDeliveryAddres['city']"
+        label="Город"
+        :required="true"
+        :disabled="true"
+        :error="updateddeliveryAddressErrors['city']"
+        @remove-error="updateddeliveryAddressErrors['city'] = ''"
+      />
+    </li>
+    <li class="order-delivery__item order-delivery__item--street">
+      <app-input
+        v-model="updatedDeliveryAddres['street']"
+        label="Улица"
+        :required="true"
+        :error="updateddeliveryAddressErrors['street']"
+        @remove-error="updateddeliveryAddressErrors['street'] = ''"
+      />
+    </li>
+    <li class="order-delivery__item order-delivery__item--house">
+      <app-input
+        v-model="updatedDeliveryAddres['house']"
+        label="Дом"
+        :required="true"
+        :error="updateddeliveryAddressErrors['house']"
+        @remove-error="updateddeliveryAddressErrors['house'] = ''"
+      />
+    </li>
+    <li class="order-delivery__item order-delivery__item--building">
+      <app-input
+        v-model="updatedDeliveryAddres['building']"
+        label="Кор."
+        :error="updateddeliveryAddressErrors['building']"
+        @remove-error="updateddeliveryAddressErrors['building'] = ''"
+      />
+    </li>
+    <li class="order-delivery__item order-delivery__item--appartment">
+      <app-input
+        v-model="updatedDeliveryAddres['appartment']"
+        label="Кв."
+        :error="updateddeliveryAddressErrors['appartment']"
+        @remove-error="updateddeliveryAddressErrors['appartment'] = ''"
+      />
+    </li>
+  </ul>
 </template>
 
 <script lang="ts" setup>
 import { type PropType, computed } from 'vue'
-import AppInput from '@/components/UI/AppInput.vue'
-import OrderFieldset from '@/components/OrderFieldset.vue'
+import AppInput from '@/components/AppInput.vue'
 import { type UserAddress } from '@/interfaces/OrderInterfaces'
 
 const emit = defineEmits(['update:deliveryAddress', 'update:deliveryAddressErrors'])
@@ -68,4 +72,36 @@ const updateddeliveryAddressErrors = computed({
   }
 })
 </script>
-@/interfaces/OrderInterfaces
+
+<style lang="scss" scoped>
+@import '@/assets/style/config/variables.scss';
+
+.order-delivery {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 18px;
+
+  grid-template-areas:
+    'city city city'
+    'street street street'
+    'house building appartment';
+
+  &__item {
+    &--city {
+      grid-area: city;
+    }
+    &--street {
+      grid-area: street;
+    }
+    &--house {
+      grid-area: house;
+    }
+    &--building {
+      grid-area: building;
+    }
+    &--appartment {
+      grid-area: appartment;
+    }
+  }
+}
+</style>

@@ -1,35 +1,9 @@
 @import './config/normalize.scss';
-@import './config/settings.scss';
-@import './config/variables.scss';
-@import './config/transitions.scss';
 
-@import './components/select.scss';
-@import './components/cart-order-form.scss';
-@import './components/button-submit.scss';
-@import './components/price.scss';
-@import './components/option-descr.scss';
-@import './components/size-picker.scss';
-@import './components/button-reset.scss';
-@import './components/input.scss';
-@import './components/pagination.scss';
-@import './components/counter.scss';
-@import './components/checkbox.scss';
-@import './components/title.scss';
-@import './components/button-cross.scss';
-@import './components/form-confirm.scss';
-@import './components/user-form.scss';
-@import './components/logout-form.scss';
-@import './components/modal.scss';
-@import './components/price-for-one.scss';
-@import './components/spinner.scss';
+@import './config/variables.scss';
+@import './config/settings.scss';
+@import './config/transitions.scss';
 
 @import 'swiper/css';
 @import 'swiper/css/pagination';
 @import 'swiper/css/navigation';
-
-@import './header.scss';
-@import './catalog-page.scss';
-@import './product-page.scss';
-@import './cart-page.scss';
-@import './order-page.scss';
-@import './footer.scss';

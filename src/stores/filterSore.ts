@@ -23,7 +23,7 @@ export const useFilterStore = defineStore('filterStore', () => {
       const res: AxiosResponse<Color[]> = await axios.get(`${BASE_API_URL}${COLORS_PATH}`)
       colors.value = res.data
     } catch (err) {
-      console.log(err)
+      console.error(err)
       colorsError.value = err
     } finally {
       isColorsLoading.value = false
@@ -36,7 +36,7 @@ export const useFilterStore = defineStore('filterStore', () => {
       const res: AxiosResponse<Size[]> = await axios.get(`${BASE_API_URL}${SIZES_PATH}`)
       sizes.value = res.data
     } catch (err) {
-      console.log(err)
+      console.error(err)
       sizesError.value = err
     } finally {
       isSizesLoading.value = false

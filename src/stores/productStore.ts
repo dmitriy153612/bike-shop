@@ -22,7 +22,7 @@ export const useProductStore = defineStore('productStore', () => {
       )
       product.value = res.data
     } catch (err) {
-      console.log(err)
+      console.error(err)
       error.value = err
     } finally {
       isLoading.value = false

@@ -1,45 +1,31 @@
 <template>
-  <order-fieldset class="order-pickup" legend="Пункт выдачи">
-    <ul ref="scrollContainerEl" class="pickup-addresses">
-      <li
-        v-for="(item, index) in pickupList"
-        :key="index"
-        :class="{ selected: modelValue === item._id }"
-        class="pickup-addresses__item order-radio"
-      >
-        <input
-          :id="`pickup-address-${index}`"
-          v-model="updatedModelValue"
-          class="order-radio__input"
-          type="radio"
-          name="pickup-address"
-          :value="item._id"
-          @focus="focusedElId = `pickup-address-${index}`"
-        />
-        <label class="order-radio__label" :for="`pickup-address-${index}`">
-          <span class="order-radio__metro-box">
-            <svg class="order-radio__svg" :fill="item.lineColor">
+  <ul class="pickup-addresses" :options="scrollbarOptions">
+    <li v-for="(item, index) in pickupList" :key="index" class="pickup-addresses__item">
+      <switcher-btn :value="item._id" v-model="updatedModelValue">
+        <div class="pickup-addresses__inner">
+          <span class="pickup-addresses__metro-box">
+            <svg class="pickup-addresses__svg" :fill="item.lineColor">
               <use xlink:href="#metro" />
             </svg>
-            <span class="order-radio__metro">{{ item.metro }}</span>
+            <span class="pickup-addresses__metro">{{ item.metro }}</span>
           </span>
-          <span class="order-radio__address">{{ item.address }}</span>
-          <span class="order-radio__date-box">
-            <span v-for="(date, i) in item.workTime" :key="i" class="order-radio__date-item">
-              <span class="order-radio__day">{{ date.day }}:</span>
-              <span class="order-radio__time">{{ date.time }}</span>
+          <span class="pickup-addresses__address">{{ item.address }}</span>
+          <span class="pickup-addresses__date-box">
+            <span v-for="(date, i) in item.workTime" :key="i" class="pickup-addresses__date-item">
+              <span class="pickup-addresses__day">{{ date.day }}:</span>
+              <span class="pickup-addresses__time">{{ date.time }}</span>
             </span>
           </span>
-        </label>
-      </li>
-    </ul>
-  </order-fieldset>
+        </div>
+      </switcher-btn>
+    </li>
+  </ul>
 </template>
 
 <script lang="ts" setup>
-import { type PropType, computed, ref, watch } from 'vue'
-import OrderFieldset from '@/components/OrderFieldset.vue'
+import SwitcherBtn from '@/components/SwitcherBtn.vue'
 import { useOrderStore } from '@/stores/orderStore'
+import { type PropType, computed } from 'vue'
 import { type Pickpoint } from '@/interfaces/OrderInterfaces'
 
 const emit = defineEmits(['update:modelValue'])
@@ -51,8 +37,9 @@ const props = defineProps({
 
 const orderStore = useOrderStore()
 
-const focusedElId = ref<string>('')
-const scrollContainerEl = ref<HTMLElement | null>(null)
+const scrollbarOptions = {
+  wheelPropagation: false
+}
 
 const updatedModelValue = computed({
   get: () => props.modelValue,
@@ -62,20 +49,102 @@ const updatedModelValue = computed({
 })
 
 orderStore.fetchGetPickupPoints()
+</script>
 
-function scrollToFocusedElem(focusedElId: string) {
-  const focusedRadioBtn = document.getElementById(focusedElId)
-  if (focusedRadioBtn && scrollContainerEl.value) {
-    scrollContainerEl.value.scrollTop =
-      focusedRadioBtn.offsetTop - scrollContainerEl.value.offsetTop
+<style lang="scss" scoped>
+@import '@/assets/style/config/variables.scss';
+
+.pickup-addresses {
+  display: grid;
+  row-gap: 18px;
+  padding: 10px 4px 0 0;
+  max-height: 285px;
+
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+
+  @media #{$screen-huge} {
+    max-height: 340px;
+  }
+
+  &__inner {
+    display: grid;
+    grid-template-areas:
+      'metro-box date-box'
+      'address date-box';
+    gap: 6px;
+
+    @media #{$screen-small} {
+      grid-template-areas:
+        'metro-box'
+        'date-box'
+        'address';
+    }
+  }
+
+  &__metro-box {
+    grid-area: metro-box;
+    display: flex;
+    gap: 4px;
+    align-items: flex-end;
+  }
+
+  &__svg {
+    height: 24px;
+    width: 24px;
+  }
+
+  &__metro {
+    line-height: 1;
+    font-weight: 600;
+  }
+
+  &__address {
+    grid-area: address;
+
+    padding-left: 28px;
+    line-height: 1.15;
+
+    @media #{$screen-small} {
+      padding-left: 10px;
+    }
+  }
+
+  &__date-box {
+    grid-area: date-box;
+    display: grid;
+    justify-self: flex-end;
+    align-self: flex-start;
+
+    font-size: 12px;
+
+    @media #{$screen-small} {
+      justify-self: flex-start;
+    }
+  }
+
+  &__date-item {
+    display: flex;
+    gap: 4px;
+    justify-content: space-between;
+
+    @media #{$screen-small} {
+      justify-content: flex-start;
+      padding-left: 10px;
+    }
+  }
+
+  &__day {
+    white-space: nowrap;
+    font-weight: 600;
+  }
+
+  &__time {
+    white-space: nowrap;
+  }
+
+  &__date-item {
+    flex-wrap: nowrap;
   }
 }
-
-watch(
-  () => focusedElId.value,
-  (newValue) => {
-    scrollToFocusedElem(newValue)
-  }
-)
-</script>
-@/interfaces/OrderInterfaces
+</style>

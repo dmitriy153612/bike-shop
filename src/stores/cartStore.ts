@@ -87,7 +87,7 @@ export const useCartStore = defineStore('cartStore', () => {
       )
       cartAmount.value = res.data.totalCartAmount
     } catch (err) {
-      console.log(err)
+      console.error(err)
     } finally {
       isAddtoCartLoading.value = false
     }
@@ -115,7 +115,7 @@ export const useCartStore = defineStore('cartStore', () => {
         cartConfig.value = null
       }
     } catch (err) {
-      console.log(err)
+      console.error(err)
     } finally {
       isGetCartLoading.value = false
       globalStore.showSpinner(false)
@@ -147,7 +147,7 @@ export const useCartStore = defineStore('cartStore', () => {
         cartConfig.value = res.data.config
       }
     } catch (err) {
-      console.log(err)
+      console.error(err)
     }
   }
 
@@ -170,7 +170,7 @@ export const useCartStore = defineStore('cartStore', () => {
       cartAmount.value = res.data.config.totalAmount
       cartConfig.value = res.data.config
     } catch (err) {
-      console.log(err)
+      console.error(err)
     } finally {
       isCartRemoveLoading.value = false
     }
@@ -200,7 +200,7 @@ export const useCartStore = defineStore('cartStore', () => {
         cartConfig.value = res.data.config
       }
     } catch (err) {
-      console.log(err)
+      console.error(err)
     } finally {
       isSelectCartProductLoading.value--
     }

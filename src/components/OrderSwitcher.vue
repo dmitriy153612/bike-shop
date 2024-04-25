@@ -1,29 +1,16 @@
 <template>
-  <order-fieldset class="order-switcher" :legend="legend">
-    <ul class="order-switcher__list">
-      <li
-        v-for="(prop, index) in propertyList"
-        :key="index"
-        class="order-radio order-switcher__item"
+  <ul class="order-switcher">
+    <li class="order-switcher__item" v-for="(item, index) in values" :key="index">
+      <switcher-btn
+        class="order-switcher__btn"
+        :value="item._id"
+        :disabled="!item.available"
+        v-model="updatedId"
       >
-        <span v-if="!prop.available" class="order-switcher__disabled" />
-        <input
-          :id="`order-switcher${prop._id + index}`"
-          v-model="updatedModelValue"
-          class="order-radio__input order-switcher__input"
-          type="radio"
-          :disabled="!prop.available"
-          :name="name"
-          :value="prop._id"
-        />
-        <label
-          :for="`order-switcher${prop._id + index}`"
-          class="order-radio__label order-switcher__label"
-          :class="{ selected: modelValue === prop._id }"
-        >
+        <div class="order-switcher__content">
           <span class="order-switcher__svg-box">
             <svg
-              v-for="(svgid, i) in svgIds[prop.type as keyof typeof svgIds]"
+              v-for="(svgid, i) in svgIds[item.type as keyof typeof svgIds]"
               :key="i"
               class="order-switcher__svg"
             >
@@ -32,38 +19,41 @@
           </span>
 
           <span class="order-switcher__type">
-            {{ prop.name }}
+            {{ item.name }}
             <br />
-            <span v-if="!prop.available" class="order-switcher__type-disabled"
-              >Временно недоступно</span
+            <span v-if="!item.available" class="order-switcher__type-disabled">
+              Временно недоступно</span
             >
-            <span v-if="'deliveryTime' in prop" class="order-switcher__time">
-              {{ deliverTime(prop) }}</span
+            <span v-if="'deliveryTime' in item" class="order-switcher__time">
+              {{ deliveryTime(item) }}</span
             >
           </span>
 
-          <span v-if="'price' in prop" class="order-switcher__price">
-            {{ formatCurrency(prop.price) }}
+          <span v-if="'price' in item" class="order-switcher__price">
+            {{ formatCurrency(item.price) }}
           </span>
-        </label>
-      </li>
-    </ul>
-  </order-fieldset>
+        </div>
+      </switcher-btn>
+    </li>
+  </ul>
 </template>
 
 <script lang="ts" setup>
-import OrderFieldset from '@/components/OrderFieldset.vue'
-import formatCurrency from '@/helpers/formatCurrency'
-import { type PropType, computed } from 'vue'
+import { computed } from 'vue'
 import { type DeliveryType, type PaymentType } from '@/interfaces/OrderInterfaces'
+import formatCurrency from '@/helpers/formatCurrency'
+import SwitcherBtn from '@/components/SwitcherBtn.vue'
+
+const props = defineProps({
+  values: { type: Array as () => DeliveryType[] | PaymentType[], required: true },
+  modelValue: { type: String, required: true }
+})
 
 const emit = defineEmits(['update:modelValue'])
 
-const props = defineProps({
-  propertyList: { type: Array as PropType<DeliveryType[] | PaymentType[]>, required: true },
-  modelValue: { type: String, required: true },
-  legend: { type: String, required: true },
-  name: { type: String, required: true }
+const updatedId = computed({
+  get: () => props.modelValue,
+  set: (newValue) => emit('update:modelValue', newValue)
 })
 
 const svgIds: { delivery: string[]; pickup: string[]; online: string[] } = {
@@ -72,12 +62,7 @@ const svgIds: { delivery: string[]; pickup: string[]; online: string[] } = {
   online: ['#visa', '#mastercard']
 }
 
-const updatedModelValue = computed({
-  get: () => props.modelValue,
-  set: (newValue) => emit('update:modelValue', newValue)
-})
-
-const deliverTime = (prop: DeliveryType) => {
+const deliveryTime = (prop: DeliveryType) => {
   const daysAmount = prop.deliveryTime / 24
   let from = '1-'
   let wordDay = ''
@@ -91,4 +76,64 @@ const deliverTime = (prop: DeliveryType) => {
   return `${from}${daysAmount} ${wordDay}`
 }
 </script>
-@/interfaces/OrderInterfaces
+
+<style lang="scss" scoped>
+@import '@/assets/style/config/variables.scss';
+
+.order-switcher {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+
+  @media #{$screen-medium} {
+    grid-template-columns: 1fr;
+  }
+
+  &__btn {
+    height: 100%;
+  }
+
+  &__content {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 6px;
+
+    @media #{$screen-medium} {
+      grid-template-columns: auto 1fr auto;
+    }
+  }
+
+  &__svg-box {
+    display: flex;
+    gap: 6px;
+
+    @media #{$screen-small} {
+      flex-direction: column;
+      gap: 0;
+    }
+  }
+
+  &__svg {
+    justify-self: flex-end;
+    height: 40px;
+    width: 40px;
+    fill: $sunglow;
+    transition: fill 0.2s ease;
+  }
+
+  &__type {
+    align-self: center;
+    font-weight: 600;
+  }
+
+  &__type-disabled {
+    color: $boulder;
+  }
+
+  &__time {
+    color: $black;
+    font-weight: 400;
+    font-size: 14px;
+  }
+}
+</style>

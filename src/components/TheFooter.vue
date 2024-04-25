@@ -1,39 +1,23 @@
 <template>
   <footer class="footer">
-    <div class="section footer__inner">
-      <ul class="footer__links footer__links-1">
-        <li v-for="(data, index) in linksData" :key="index">
-          <a class="footer__link" :href="data.href">
-            {{ data.linkName }}
-          </a>
-        </li>
-      </ul>
-
-      <ul class="footer__social social">
-        <li v-for="(data, index) in socialLinksData" :key="index" class="social__item">
-          <a class="social__link" :href="data.href" :aria-label="data.linkName">
-            <svg fill="currentColor">
-              <use :xlink:href="data.svgId" />
-            </svg>
-          </a>
-        </li>
-      </ul>
-
-      <ul class="footer__links footer__links-2">
-        <li v-for="(data, index) in dataLinksData" :key="index">
-          <a class="footer__link" :href="data.href">
-            {{ data.linkName }}
-          </a>
-        </li>
-      </ul>
-
-      <span class="footer__copyright"> © 2023 Mountain bikes </span>
-    </div>
+    <app-container class="footer__inner">
+      <footer-links class="footer__links-1" :linksArr="linksData" />
+      <app-social class="footer__social" />
+      <footer-links class="footer__links-2" :linksArr="dataLinksData" />
+      <app-copyright class="footer__copyright" />
+    </app-container>
   </footer>
 </template>
 
 <script lang="ts" setup>
-const linksData = [
+import AppSocial from '@/components/AppSocial.vue'
+import FooterLinks from '@/components/FooterLinks.vue'
+import AppCopyright from '@/components/AppCopyright.vue'
+import AppContainer from '@/components/AppContainer.vue'
+
+import { type Link } from '@/interfaces/Link'
+
+const linksData: Link[] = [
   { linkName: 'Каталог', href: '#' },
   { linkName: '8 999 999 99 99', href: 'tel:89999999999' },
   { linkName: 'mountain-bikes@bike.com', href: 'mailto:mountain-bikes@bike.com' },
@@ -41,14 +25,58 @@ const linksData = [
   { linkName: 'Заказать звонок', href: '#' }
 ]
 
-const socialLinksData = [
-  { linkName: 'Телеграм', svgId: '#telegram', href: '#' },
-  { linkName: 'Твиттер', svgId: '#twitter', href: '#' },
-  { linkName: 'Вконтакте', svgId: '#vk', href: '#' }
-]
-
-const dataLinksData = [
+const dataLinksData: Link[] = [
   { linkName: 'Политика конфиденциальности', href: '#' },
   { linkName: 'Публичная оферта', href: '#' }
 ]
 </script>
+
+<style lang="scss" scoped>
+@import '@/assets/style/config/variables.scss';
+
+.footer {
+  background-color: $black;
+  &__inner {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    grid-template-areas:
+      'links-1 social links-2'
+      'links-1 social copyright';
+    align-items: flex-start;
+    column-gap: 16px;
+    padding: 20px;
+
+    @media #{$screen-medium} {
+      grid-template-columns: 1fr auto;
+      grid-template-areas:
+        'links-1 social'
+        'links-1 links-2'
+        'links-1 copyright';
+    }
+
+    @media #{$screen-small} {
+      grid-template-columns: 1fr;
+      gap: 10px;
+      grid-template-areas:
+        'social'
+        'links-1'
+        'links-2'
+        'copyright';
+    }
+  }
+
+  &__links-1 {
+    grid-area: links-1;
+  }
+  &__links-2 {
+    grid-area: links-2;
+  }
+  &__social {
+    grid-area: social;
+    justify-self: center;
+    @media #{$screen-medium} {
+      justify-self: flex-start;
+    }
+  }
+}
+</style>

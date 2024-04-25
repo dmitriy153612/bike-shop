@@ -1,55 +1,40 @@
 <template>
-  <transition name="appear">
-    <app-section v-if="isProductLoaded" class="product-sec">
-      <app-swiper class="product-sec__swiper" :images-urls="imagesUrls" :title="title" />
-      <app-title class="product-sec__title">
-        {{ title }}
-      </app-title>
-      <div class="product-descr-box product-sec__descr">
-        <app-option-descr
-          class="product-descr-box__brand"
-          option-name="Брэнд"
-          :option-value="formatedBrandName"
-        />
-        <app-option-descr
-          class="product-descr-box__size"
-          option-name="Размер"
-          :option-value="formatedSizeName"
-        />
-        <app-option-descr
-          class="product-descr-box__color"
-          option-name="Цвет"
-          :option-value="colorName"
-        />
-        <div class="product-descr-box__price-box">
-          <h2 class="product-descr-box__price-title">Цена:</h2>
-          <app-price :price="price" :old-price="oldPrice" />
-        </div>
-        <app-size-picker v-model="sizeId" class="product-descr-box__size-picker" :sizes="sizes" />
-        <app-button-submit
-          class="product-descr-box__btn"
-          :show-spinner="cartStore.isAddtoCartLoading"
-          btn-name="В корзину"
-          @click="addToCart"
-        >
-          <svg><use xlink:href="#cart" /></svg>
-        </app-button-submit>
-      </div>
+  <page-structure :breadcrumbs="breadcrumbs">
+    <div class="product-page" v-if="product">
+      <section class="product-page__sec">
+        <app-container class="product-page__container">
+          <app-title class="product-page__title">
+            {{ title }}
+          </app-title>
 
-      <product-info class="product-sec__info" :info-list="productInfoData" />
-    </app-section>
-  </transition>
+          <app-swiper class="product-page__swiper" :images-urls="imagesUrls" :title="title" />
+          <product-descr-box
+            class="product-page__descr"
+            :formatedBrandName="formatedBrandName"
+            :formatedSizeName="formatedSizeName"
+            :colorName="colorName"
+            :price="price"
+            :oldPrice="oldPrice"
+            :showBtnSpinner="cartStore.isAddtoCartLoading"
+            :sizes="sizes"
+            v-model="sizeId"
+            @add-to-cart="addToCart"
+          />
+
+          <product-info class="product-page__info" :info-list="productInfoData" />
+        </app-container>
+      </section>
+    </div>
+  </page-structure>
 </template>
 
 <script lang="ts" setup>
-import AppTitle from '@/components/common/AppTitle.vue'
-import AppSection from '@/components/common/AppSection.vue'
-import AppSwiper from '@/components/UI/AppSwiper.vue'
-import AppSizePicker from '@/components/UI/AppSizePicker.vue'
-import AppPrice from '@/components/common/AppPrice.vue'
-import AppButtonSubmit from '@/components/UI/AppButtonSubmit.vue'
-import AppOptionDescr from '@/components/common/AppOptionDescr.vue'
+import PageStructure from '@/components/PageStructure.vue'
+import AppTitle from '@/components/AppTitle.vue'
+import AppContainer from '@/components/AppContainer.vue'
+import AppSwiper from '@/components/AppSwiper.vue'
 import ProductInfo from '@/components/ProductInfo.vue'
+import ProductDescrBox from '@/components/ProductDescrBox.vue'
 import { useProductStore } from '@/stores/productStore'
 import { ref, watch, computed, watchEffect } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
@@ -86,6 +71,7 @@ const formatedBrandName = computed<string>(() => {
   }
   return ''
 })
+
 const colorName = computed<string>(() => (product.value ? product.value.color?.name : ''))
 const sizes = computed<Size[]>(() => (product.value ? product.value.sizes : []))
 const price = computed<number>(() => (product.value ? product.value.price : 0))
@@ -95,6 +81,18 @@ const oldPrice = computed<number | undefined>(() =>
 const productInfoData = computed<ProductInfoInterface[]>(() =>
   product.value ? product.value.info : []
 )
+
+const breadcrumbs = computed(() => [
+  {
+    linkName: 'Каталог',
+    pageName: 'catalog'
+  },
+  {
+    linkName: title.value,
+    pageName: 'product'
+  }
+])
+
 const formatedSizeName = computed<string>(() => {
   if (sizes.value) {
     const sizeObj: Size | undefined = sizes.value.find((size) => size._id === sizeId.value)
@@ -144,4 +142,69 @@ watch(
   }
 )
 </script>
-@/interfaces/ProductInterfaces
+
+<style lang="scss" scoped>
+@import '@/assets/style/config/variables.scss';
+
+.product-page {
+  &__container {
+    display: grid;
+    grid-template-columns: 0.7fr 0.3fr;
+    grid-template-rows: auto 1fr auto;
+    grid-template-areas:
+      'swiper title'
+      'swiper descr'
+      'info info';
+    column-gap: 30px;
+    row-gap: 20px;
+
+    @media #{$screen-huge} {
+      grid-template-columns: 1fr auto;
+      grid-template-rows: auto auto 1fr;
+      grid-template-areas:
+        'title title'
+        'swiper descr'
+        'info info';
+    }
+
+    @media #{$screen-medium} {
+      grid-template-columns: 1fr;
+      grid-template-areas:
+        'title'
+        'swiper'
+        'descr'
+        'info';
+    }
+  }
+
+  &__swiper {
+    grid-area: swiper;
+    align-self: flex-start;
+    aspect-ratio: 384 / 212;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  &__title {
+    grid-area: title;
+    padding-bottom: 0px;
+
+    @media #{$screen-medium} {
+      justify-self: center;
+    }
+  }
+
+  &__descr {
+    grid-area: descr;
+    align-self: flex-start;
+
+    @media #{$screen-medium} {
+      justify-self: center;
+    }
+  }
+
+  &__info {
+    grid-area: info;
+  }
+}
+</style>

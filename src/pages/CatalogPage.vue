@@ -1,67 +1,75 @@
 <template>
-  <app-section class="catalog-sec">
-    <app-title class="catalog-sec__title"> Mountain bikes </app-title>
-    <transition :name="filterTransitionType">
-      <catalog-filter
-        v-if="isFilterLoaded && globalStore.isfilterOpen"
-        class="catalog-sec__filter"
-        :colors="filterSore.colors"
-        :sizes="filterSore.sizes"
-        :brands="filterSore.brands"
-      />
-    </transition>
+  <div class="catalog-page">
+    <app-container class="catalog-page__container">
+      <app-title class="catalog-page__title"> Mountain bikes </app-title>
+      <transition name="appear-left">
+        <aside class="catalog-page__aside" v-if="isFilterLoaded">
+          <transition name="appear">
+            <catalog-filter
+              v-if="isFilterVisible"
+              class="catalog-page__filter"
+              :colors="filterSore.colors"
+              :sizes="filterSore.sizes"
+              :brands="filterSore.brands"
+            />
+          </transition>
+        </aside>
+      </transition>
+      <transition name="appear-top">
+        <app-select
+          v-if="isFilterLoaded && totalProductsAmount"
+          class="catalog-page__select"
+          placeholder="Сортировка"
+          :properties="sortingArr"
+          :selected-id="sortingId"
+          @select="setSortingId"
+        />
+      </transition>
 
-    <transition name="appear-top">
-      <app-select
-        v-if="isFilterLoaded"
-        class="catalog-sec__select"
-        placeholder="Сортировка"
-        :properties="sortingArr"
-        :selected-id="sortingId"
-        @select="setSortingId"
-      />
-    </transition>
-    <transition name="appear">
-      <catalog-counter
-        v-if="isCatalogLoaded"
-        class="catalog-sec__counter"
-        :amount="totalProductsAmount"
-      />
-    </transition>
-    <div></div>
+      <div class="catalog-page__counter-box">
+        <transition name="appear">
+          <catalog-counter v-if="isCatalogLoaded" :amount="totalProductsAmount" />
+        </transition>
+      </div>
+      <div class="catalog-page__applied-filters-box">
+        <applied-filters />
+      </div>
 
-    <transition name="appear">
-      <catalog-list
-        v-if="isCatalogLoaded"
-        class="catalog-sec__list"
-        :catalog="catalogStore.catalog"
+      <main class="catalog-page__main">
+        <section class="catalog-page__sec">
+          <catalog-list
+            v-if="isCatalogLoaded"
+            class="catalog-page__list"
+            :catalog="catalogStore.catalog"
+          />
+        </section>
+      </main>
+      <app-pagination
+        v-if="totalPages > 1 && isCatalogLoaded"
+        class="catalog-page__pagination"
+        :total-pages="totalPages"
       />
-    </transition>
-    <app-pagination
-      v-if="totalPages > 1"
-      class="catalog-sec__pagination"
-      :total-pages="totalPages"
-    />
-  </app-section>
+    </app-container>
+  </div>
 </template>
 
 <script lang="ts" setup>
-import AppTitle from '@/components/common/AppTitle.vue'
-import AppSection from '@/components/common/AppSection.vue'
+import AppTitle from '@/components/AppTitle.vue'
+import AppContainer from '@/components/AppContainer.vue'
 import CatalogList from '@/components/CatalogList.vue'
 import CatalogFilter from '@/components/CatalogFilter.vue'
 import CatalogCounter from '@/components/CatalogCounter.vue'
-import AppPagination from '@/components/UI/AppPagination.vue'
-import setQueryToFilter from '@/helpers/setQueryToFilter'
-import AppSelect from '@/components/UI/AppSelect.vue'
+import AppPagination from '@/components/AppPagination.vue'
+import { useGetQueryFromRoute } from '@/composables/getCatalogQueries'
+import AppSelect from '@/components/AppSelect.vue'
+import AppliedFilters from '@/components/AppliedFilters.vue'
 import { useCatalogStore } from '@/stores/catalogStore'
 import { useFilterStore } from '@/stores/filterSore'
 import { useGlobalStore } from '@/stores/globalStore'
-import { computed, ref, watchEffect, watch, onUnmounted } from 'vue'
-import { lockScroll } from '@/helpers/lockScroll'
+import { computed, ref, watchEffect, watch, onMounted, onUnmounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import {
-  type FilterParams,
+  type CatalogPageParams,
   type SortingItem,
   type CatalogConfig
 } from '@/interfaces/CatalogInterfaces'
@@ -72,14 +80,17 @@ const filterSore = useFilterStore()
 const catalogStore = useCatalogStore()
 const globalStore = useGlobalStore()
 
+const { getAllCatalogQueries } = useGetQueryFromRoute()
+
 const sortingId = ref<string>('')
-const catalogParams = ref<FilterParams>({
+const catalogParams = ref<CatalogPageParams>({
   colorId: [],
   sizeId: [],
   brandId: [],
   minPrice: 0,
   maxPrice: 0,
-  page: 1
+  page: 1,
+  sorting: ''
 })
 
 const sortingArr: SortingItem[] = [
@@ -88,9 +99,20 @@ const sortingArr: SortingItem[] = [
   { label: 'Цена по убыванию', id: 'priceDown' }
 ]
 
+const screenWidth = ref<number>(window.innerWidth)
+
 filterSore.fetchColors()
 filterSore.fetchSizes()
 filterSore.fetchBrands()
+
+const isFilterVisible = computed(() => {
+  if (screenWidth.value > 1024) {
+    return true
+  } else if (screenWidth.value <= 1024 && globalStore.isfilterOpen) {
+    return true
+  }
+  return false
+})
 
 const config = computed<CatalogConfig | null>(() => catalogStore.config)
 
@@ -117,56 +139,23 @@ const totalPages = computed<number>(() => {
   return 0
 })
 
-const currentOffsetWidth = ref<number>(0)
-const iscurrentOffsetWidthGreater1024 = ref(!(Number(document.body.offsetWidth) > 1024))
-
-const filterTransitionType = computed(() => {
-  if (currentOffsetWidth.value > 1024) {
-    return 'appear-left'
-  }
-  return 'appear'
-})
-
 function setSortingId(id: string) {
   sortingId.value = id
 }
 
-function toggleFilterByResize() {
-  currentOffsetWidth.value = Number(document.body.offsetWidth)
-  if (currentOffsetWidth.value > 1024 && !iscurrentOffsetWidthGreater1024.value) {
-    globalStore.toggleFilter(true)
-    console.log('a lot')
-    iscurrentOffsetWidthGreater1024.value = true
-  } else if (currentOffsetWidth.value <= 1024 && iscurrentOffsetWidthGreater1024.value) {
-    globalStore.toggleFilter(false)
-    console.log('a little')
-    iscurrentOffsetWidthGreater1024.value = false
-  }
+function handleResize() {
+  screenWidth.value = window.innerWidth
 }
-toggleFilterByResize()
-
-window.addEventListener('resize', toggleFilterByResize)
 
 watchEffect(() => {
   if (route.name === 'catalog') {
     if (!route.query['page']) {
       router.replace({ query: { ...route.query, page: 1 } })
     }
-    setQueryToFilter(route.query, catalogParams)
+    catalogParams.value = getAllCatalogQueries.value
     catalogStore.fetchCatalog(catalogParams.value)
   }
 })
-
-watch(
-  () => globalStore.isfilterOpen,
-  (newValue) => {
-    if (newValue && currentOffsetWidth.value <= 1024) {
-      lockScroll(true)
-    } else {
-      lockScroll(false)
-    }
-  }
-)
 
 watch(
   () => sortingId.value,
@@ -175,6 +164,7 @@ watch(
   },
   { deep: true }
 )
+
 watch(
   () => route.query['sorting'],
   (newValue) => {
@@ -192,7 +182,88 @@ watch(
   },
   { immediate: true }
 )
+
+onMounted(() => {
+  window.addEventListener('resize', handleResize)
+})
+
 onUnmounted(() => {
-  window.removeEventListener('resize', toggleFilterByResize)
+  window.removeEventListener('resize', handleResize)
 })
 </script>
+
+<style lang="scss" scoped>
+@import '@/assets/style/config/variables.scss';
+
+.catalog-page {
+  &__container {
+    display: grid;
+    grid-template-columns: minmax(157px, min-content) auto 1fr;
+    grid-template-rows: auto auto auto 1fr auto;
+    grid-template-areas:
+      'title title title'
+      'aside select counter'
+      'aside applied-filters applied-filters'
+      'aside main main'
+      '. pagination pagination';
+    column-gap: 30px;
+    height: 100%;
+    overflow-x: hidden;
+
+    @media #{$screen-huge} {
+      grid-template-columns: auto 1fr;
+      grid-template-areas:
+        'title title'
+        'select counter'
+        'applied-filters applied-filters'
+        'main main'
+        'pagination pagination';
+      column-gap: 15px;
+    }
+  }
+
+  &__title {
+    grid-area: title;
+    justify-self: center;
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+
+  &__aside {
+    grid-area: aside;
+
+    @media #{$screen-huge} {
+      position: absolute;
+    }
+  }
+
+  &__select {
+    grid-area: select;
+    justify-self: flex-start;
+    align-self: flex-start;
+  }
+
+  &__counter-box {
+    grid-area: counter;
+  }
+
+  &__applied-filters-box {
+    grid-area: applied-filters;
+  }
+
+  &__main {
+    grid-area: main;
+  }
+
+  &__list {
+    grid-area: list;
+    padding-top: 18px;
+    padding-bottom: 36px;
+  }
+
+  &__pagination {
+    grid-area: pagination;
+    justify-self: center;
+  }
+}
+</style>

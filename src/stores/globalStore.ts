@@ -1,13 +1,15 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
+import { lockScroll } from '@/helpers/lockScroll'
 
 export const useGlobalStore = defineStore('globalStore', () => {
   const isLoginModalOpen = ref<boolean>(false)
   const isMainSpinnerShown = ref<boolean>(false)
   const isSelectedCartItemAmountChanging = ref<number>(0)
-  const isfilterOpen = ref<boolean>(true)
+  const isfilterOpen = ref<boolean>(false)
 
   function openLoginModal(isOpen: boolean): void {
+    lockScroll(isOpen)
     isLoginModalOpen.value = isOpen
   }
 
@@ -19,12 +21,8 @@ export const useGlobalStore = defineStore('globalStore', () => {
     isSelectedCartItemAmountChanging.value += value
   }
 
-  function toggleFilter(isOpen: boolean | undefined = undefined) {
-    if (isOpen === true || isOpen === false) {
-      isfilterOpen.value = isOpen
-    } else {
-      isfilterOpen.value = !isfilterOpen.value
-    }
+  function toggleFilter() {
+    isfilterOpen.value = !isfilterOpen.value
   }
 
   return {

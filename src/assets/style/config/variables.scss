@@ -1,10 +1,16 @@
-$color1: #ffc929;
-$color2: #000;
-$color3: #dd2c00;
-$color4: #fff;
-$color5: #757575;
-$color6: rgba(0, 0, 0, 0.4);
-$color7: #0277bd;
-$color8: #dbdbdb;
+$sunglow: #ffc929;
+$sunglowLighten: lighten($sunglow, 20%);
+$black: #000;
+$grenadier: #dd2c00;
+$white: #fff;
+$boulder: #757575;
+$lochmara: #0277bd;
+$alto: #dbdbdb;
 
-$hover-min-width: 769px;
+$layoutBackground: rgba($black, 0.4);
+
+$hover-min-width: '(min-width: 769px)';
+
+$screen-huge: '(max-width: 1024px)';
+$screen-medium: '(max-width: 768px)';
+$screen-small: '(max-width: 568px)';

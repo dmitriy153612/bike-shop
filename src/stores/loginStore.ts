@@ -58,7 +58,7 @@ export const useLoginStore = defineStore('loginStore', () => {
       userId.value = res.data.userId
       userEmail.value = res.data.email
     } catch (err) {
-      console.log(err)
+      console.error(err)
       error.value = err
       logout()
     } finally {
@@ -79,7 +79,7 @@ export const useLoginStore = defineStore('loginStore', () => {
       localStorage.setItem('userData', JSON.stringify(res.data))
       cartStore.setCartAmount(res.data.cartAmount)
     } catch (err) {
-      console.log(err)
+      console.error(err)
       error.value = err
     } finally {
       isLoginLoading.value = false

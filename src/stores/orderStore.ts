@@ -74,7 +74,7 @@ export const useOrderStore = defineStore('orderStore', () => {
       )
       orderList.value = res.data.products
     } catch (err) {
-      console.log(err)
+      console.error(err)
     } finally {
       isGetOrderLoading.value = false
       globalStore.showSpinner(false)
@@ -102,7 +102,7 @@ export const useOrderStore = defineStore('orderStore', () => {
       )
       orderConfig.value = res.data.config
     } catch (err) {
-      console.log(err)
+      console.error(err)
     } finally {
       isGetOrderConfigLoading.value = false
     }
@@ -117,7 +117,7 @@ export const useOrderStore = defineStore('orderStore', () => {
 
       deliveryTypesList.value = res.data
     } catch (err) {
-      console.log(err)
+      console.error(err)
     } finally {
       isGetDeliveryTypesLoading.value = false
     }
@@ -132,7 +132,7 @@ export const useOrderStore = defineStore('orderStore', () => {
       )
       paymentTypesList.value = res.data
     } catch (err) {
-      console.log(err)
+      console.error(err)
     } finally {
       isGetPaymentTypesLoading.value = false
     }
@@ -146,7 +146,7 @@ export const useOrderStore = defineStore('orderStore', () => {
       )
       pickupPointsList.value = res.data
     } catch (err) {
-      console.log(err)
+      console.error(err)
     } finally {
       isGetPickupPointsLoading.value = false
     }
@@ -166,7 +166,7 @@ export const useOrderStore = defineStore('orderStore', () => {
       )
       completeOrderNumber.value = res.data.orderNumber
     } catch (err) {
-      console.log(err)
+      console.error(err)
     } finally {
       isCreateOrderLoading.value = false
     }

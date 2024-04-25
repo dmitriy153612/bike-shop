@@ -29,7 +29,7 @@
       />
     </div>
 
-    <app-button-submit
+    <button-submit
       class="user-form__btn-submit"
       btn-name="Зарегестрироваться"
       :showSpinner="registrationStore.isLoading"
@@ -42,8 +42,8 @@
 
 <script lang="ts" setup>
 import { ref, onMounted, type Ref } from 'vue'
-import AppButtonSubmit from '@/components/UI/AppButtonSubmit.vue'
-import AppInput from '@/components/UI/AppInput.vue'
+import ButtonSubmit from '@/components/ButtonSubmit.vue'
+import AppInput from '@/components/AppInput.vue'
 import { useRegistrationStore } from '@/stores/registrationStore'
 import validateEmail from '@/helpers/validateEmail'
 import validatePassword from '@/helpers/validatePassword'
@@ -107,3 +107,62 @@ onMounted(() => {
   }
 })
 </script>
+
+<style lang="scss" scoped>
+@import '@/assets/style/config/variables.scss';
+
+.user-form {
+  display: grid;
+
+  &__title {
+    margin: 0;
+    padding-bottom: 10px;
+    font-weight: 400;
+    color: $sunglow;
+  }
+
+  &__inputs {
+    display: grid;
+    gap: 26px;
+    padding: 20px 0;
+  }
+
+  &__btn-submit {
+    justify-self: flex-start;
+  }
+
+  &__account-btn {
+    justify-self: flex-end;
+    padding: 3px;
+    border-color: transparent;
+    font-size: 14px;
+    color: $lochmara;
+    background-color: transparent;
+    cursor: pointer;
+    font-weight: 600;
+    transition-property: color, border-color;
+    transition-duration: 0.2s;
+    transition-timing-function: ease;
+    outline: none;
+  }
+
+  &__account-btn:focus {
+    border-color: lighten($lochmara, 20%);
+  }
+
+  @media #{$hover-min-width} {
+    &__account-btn:hover {
+      color: lighten($lochmara, 20%);
+    }
+  }
+
+  &__account-btn:active {
+    color: lighten($lochmara, 40%);
+  }
+
+  .app-input__input.focus + .app-input__label {
+    color: $sunglow;
+    background-color: transparent;
+  }
+}
+</style>

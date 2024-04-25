@@ -30,7 +30,7 @@ export const useCatalogStore = defineStore('catalogStore', () => {
       catalog.value = res.data.catalog
       config.value = res.data.config
     } catch (err) {
-      console.log(err)
+      console.error(err)
       error.value = err
     } finally {
       isLoading.value = false
