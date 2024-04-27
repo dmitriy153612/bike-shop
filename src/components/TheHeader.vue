@@ -102,6 +102,10 @@ function openFilter() {
   padding-right: calc(17px - (100vw - 100%));
   background-color: $black;
 
+  @media #{$screen-huge} {
+    padding-right: 0;
+  }
+
   &__inner {
     display: flex;
     justify-content: space-between;

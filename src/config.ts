@@ -1,5 +1,5 @@
 // export const BASE_API_URL = 'http://localhost:27017'
-export const BASE_API_URL: string = 'http://109.172.83.40:27017'
+export const BASE_API_URL: string = 'http://147.45.183.40:27017'
 
 export const CATALOG_PATH: string = '/catalog'
 export const PRODUCT_PATH: string = '/catalog/product'

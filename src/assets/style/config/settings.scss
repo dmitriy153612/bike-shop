@@ -21,19 +21,11 @@ body {
 }
 body {
   min-height: 100vh;
-  min-width: 400px;
-  overflow-y: scroll;
+  min-width: 375px;
 }
 
 #app {
   display: grid;
   grid-template-rows: 1fr;
   min-height: 100vh;
-}
-
-@media #{$screen-huge} {
-  html,
-  body {
-    padding-right: 0;
-  }
 }
