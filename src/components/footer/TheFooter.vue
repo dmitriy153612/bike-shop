@@ -13,7 +13,7 @@
 import AppSocial from '@/components/AppSocial.vue'
 import FooterLinks from '@/components/FooterLinks.vue'
 import AppCopyright from '@/components/AppCopyright.vue'
-import AppContainer from '@/components/AppContainer.vue'
+import AppContainer from '@/components/layouts/AppContainer.vue'
 
 import { type Link } from '@/interfaces/Link'
 

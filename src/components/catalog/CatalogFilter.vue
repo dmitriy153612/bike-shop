@@ -20,8 +20,8 @@
             <checkbox-list v-model="filterParams.colorId" :properties="colors" />
           </catalog-filter-fieldset>
           <div class="filter__price-box">
-            <app-input v-model="filterParams.minPrice" input-type="number" label="Цена от" />
-            <app-input v-model="filterParams.maxPrice" input-type="number" label="Цена до" />
+            <app-input v-model="filterParams.minPrice" input-type="currency" label="Цена от" />
+            <app-input v-model="filterParams.maxPrice" input-type="currency" label="Цена до" />
           </div>
           <button-submit
             type="submit"
@@ -41,16 +41,16 @@
 </template>
 
 <script lang="ts" setup>
-import CatalogFilterFieldset from '@/components/CatalogFilterFieldset.vue'
-import CheckboxList from '@/components/CheckboxList.vue'
-import ButtonSubmit from '@/components/ButtonSubmit.vue'
-import ButtonReset from '@/components/ButtonReset.vue'
-import ButtonCross from '@/components/ButtonCross.vue'
+import CatalogFilterFieldset from '@/components/catalog/CatalogFilterFieldset.vue'
+import CheckboxList from '@/components/UI/CheckboxList.vue'
+import ButtonSubmit from '@/components/UI/ButtonSubmit.vue'
+import ButtonReset from '@/components/UI/ButtonReset.vue'
+import ButtonCross from '@/components/UI/ButtonCross.vue'
 import { lockScroll } from '@/helpers/lockScroll'
 import { type PropType, ref, watch, onUnmounted, nextTick } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useGetQueryFromRoute } from '@/composables/getCatalogQueries'
-import AppInput from '@/components/AppInput.vue'
+import AppInput from '@/components/UI/AppInput.vue'
 import { useGlobalStore } from '@/stores/globalStore'
 import {
   type Size,

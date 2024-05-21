@@ -36,7 +36,7 @@
 
 <script lang="ts" setup>
 import { type PropType, computed } from 'vue'
-import AppInput from '@/components/AppInput.vue'
+import AppInput from '@/components/UI/AppInput.vue'
 import { type UserContact } from '@/interfaces/OrderInterfaces'
 
 const emit = defineEmits(['update:userData', 'update:userDataErrors'])

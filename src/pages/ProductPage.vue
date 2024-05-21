@@ -6,35 +6,31 @@
           <app-title class="product-page__title">
             {{ title }}
           </app-title>
-
           <app-swiper class="product-page__swiper" :images-urls="imagesUrls" :title="title" />
-          <product-descr-box
-            class="product-page__descr"
-            :formatedBrandName="formatedBrandName"
-            :formatedSizeName="formatedSizeName"
-            :colorName="colorName"
-            :price="price"
-            :oldPrice="oldPrice"
-            :showBtnSpinner="cartStore.isAddtoCartLoading"
-            :sizes="sizes"
-            v-model="sizeId"
-            @add-to-cart="addToCart"
-          />
+          <product-descr-box class="product-page__descr" :formatedBrandName="formatedBrandName"
+            :formatedSizeName="formatedSizeName" :colorName="colorName" :price="price" :oldPrice="oldPrice"
+            :showBtnSpinner="cartStore.isAddtoCartLoading" :sizes="sizes" v-model="sizeId" @add-to-cart="addToCart" />
 
           <product-info class="product-page__info" :info-list="productInfoData" />
         </app-container>
       </section>
     </div>
+
+    <app-modal :show-modal="isProductError" @close-modal="closeErrorModal">
+      <confirm-form confirm-name="Ok" message="Товар не найден" @action="closeErrorModal" />
+    </app-modal>
   </page-structure>
 </template>
 
 <script lang="ts" setup>
-import PageStructure from '@/components/PageStructure.vue'
+import PageStructure from '@/components/layouts/PageStructure.vue'
 import AppTitle from '@/components/AppTitle.vue'
-import AppContainer from '@/components/AppContainer.vue'
+import AppContainer from '@/components/layouts/AppContainer.vue'
 import AppSwiper from '@/components/AppSwiper.vue'
-import ProductInfo from '@/components/ProductInfo.vue'
-import ProductDescrBox from '@/components/ProductDescrBox.vue'
+import AppModal from '@/components/modal/AppModal.vue'
+import ConfirmForm from '@/components/modal/ConfirmForm.vue'
+import ProductInfo from '@/components/product/ProductInfo.vue'
+import ProductDescrBox from '@/components/product/ProductDescrBox.vue'
 import { useProductStore } from '@/stores/productStore'
 import { ref, watch, computed, watchEffect } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
@@ -49,6 +45,8 @@ const route = useRoute()
 const router = useRouter()
 const productStore = useProductStore()
 const cartStore = useCartStore()
+
+const isProductError = ref(false)
 
 const productId = ref<string>(route.params['id'] as string)
 const sizeId = ref<string>('')
@@ -115,6 +113,10 @@ async function addToCart(): Promise<void> {
   })
 }
 
+function closeErrorModal() {
+  isProductError.value = false
+}
+
 watchEffect(() => {
   if (isProductLoaded.value) {
     if (!isQuerySizeIdExist.value && sizes.value && sizes.value[0]) {
@@ -141,6 +143,14 @@ watch(
     }
   }
 )
+
+watch(() => productStore.error, (newValue) => {
+  if (newValue) {
+    isProductError.value = true
+  } else {
+    isProductError.value = false
+  }
+})
 </script>
 
 <style lang="scss" scoped>

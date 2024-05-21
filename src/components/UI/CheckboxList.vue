@@ -7,7 +7,7 @@
 </template>
 
 <script lang="ts" setup>
-import AppCheckbox from '@/components/AppCheckbox.vue'
+import AppCheckbox from '@/components/UI/AppCheckbox.vue'
 import { type Size } from '@/interfaces/CatalogInterfaces'
 import { type PropType, computed } from 'vue'
 

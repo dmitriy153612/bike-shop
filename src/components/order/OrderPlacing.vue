@@ -57,11 +57,11 @@ import {
   type PaymentType,
   type Pickpoint
 } from '@/interfaces/OrderInterfaces'
-import AppFieldset from '@/components/AppFieldset.vue'
-import OrderSwitcher from '@/components/OrderSwitcher.vue'
-import OrderDeliveryAddress from '@/components/OrderDeliveryAddress.vue'
-import OrderPickupAddresses from '@/components/OrderPickupAddresses.vue'
-import OrderUser from '@/components/OrderUser.vue'
+import AppFieldset from '@/components/layouts/AppFieldset.vue'
+import OrderSwitcher from '@/components/order/OrderSwitcher.vue'
+import OrderDeliveryAddress from '@/components/order/OrderDeliveryAddress.vue'
+import OrderPickupAddresses from '@/components/order/OrderPickupAddresses.vue'
+import OrderUser from '@/components/order/OrderUser.vue'
 
 const props = defineProps({
   selectedDeliveryTypeId: { type: String, required: true },

@@ -40,8 +40,8 @@
 
 <script lang="ts" setup>
 import { ref, onMounted, computed, onUnmounted, type Ref } from 'vue'
-import ButtonSubmit from '@/components/ButtonSubmit.vue'
-import AppInput from '@/components/AppInput.vue'
+import ButtonSubmit from '@/components/UI/ButtonSubmit.vue'
+import AppInput from '@/components/UI/AppInput.vue'
 import { useLoginStore } from '@/stores/loginStore'
 import { useRegistrationStore } from '@/stores/registrationStore'
 import { useGlobalStore } from '@/stores/globalStore'

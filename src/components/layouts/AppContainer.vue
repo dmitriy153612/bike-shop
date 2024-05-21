@@ -5,10 +5,11 @@
 </template>
 
 <style lang="scss" scoped>
+@import '@/assets/style/config/variables.scss';
 .container {
   max-width: 1440px;
+  min-width: $containerMinWidth;
   margin: 0 auto;
-  padding-right: 15px;
-  padding-left: 15px;
+  padding-inline: $containerInlinePadding;
 }
 </style>

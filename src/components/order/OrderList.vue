@@ -10,7 +10,7 @@
 </template>
 
 <script lang="ts" setup>
-import OrderProductItem from '@/components/OrderProductItem.vue'
+import OrderProductItem from '@/components/order/OrderProductItem.vue'
 import { type OrderProduct } from '@/interfaces/OrderInterfaces'
 import { type PropType } from 'vue'
 

@@ -16,7 +16,7 @@
 </template>
 
 <script lang="ts" setup>
-import CatalogCard from '@/components/CatalogCard.vue'
+import CatalogCard from '@/components/catalog/CatalogCard.vue'
 import { type Product } from '@/interfaces/CatalogInterfaces'
 import { type PropType } from 'vue'
 

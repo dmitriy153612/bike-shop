@@ -16,9 +16,9 @@
 </template>
 
 <script lang="ts" setup>
-import LoginForm from '@/components/LoginForm.vue'
-import RegistrationForm from '@/components/RegistrationForm.vue'
-import ConfirmForm from '@/components/ConfirmForm.vue'
+import LoginForm from '@/components/modal/LoginForm.vue'
+import RegistrationForm from '@/components/modal/RegistrationForm.vue'
+import ConfirmForm from '@/components/modal/ConfirmForm.vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useLoginStore } from '@/stores/loginStore'
 import { useGlobalStore } from '@/stores/globalStore'

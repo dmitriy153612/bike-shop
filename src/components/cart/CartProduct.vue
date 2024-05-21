@@ -47,7 +47,7 @@
 </template>
 
 <script lang="ts" setup>
-import AppCheckbox from '@/components/AppCheckbox.vue'
+import AppCheckbox from '@/components/UI/AppCheckbox.vue'
 import AppCounter from '@/components/AppCounter.vue'
 import AppPrice from '@/components/AppPrice.vue'
 import OptionDescr from '@/components/OptionDescr.vue'

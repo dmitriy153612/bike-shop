@@ -36,8 +36,8 @@
 <script lang="ts" setup>
 import OptionDescr from '@/components/OptionDescr.vue'
 import AppPrice from '@/components/AppPrice.vue'
-import AppSizePicker from '@/components/AppSizePicker.vue'
-import ButtonSubmit from '@/components/ButtonSubmit.vue'
+import AppSizePicker from '@/components/UI/AppSizePicker.vue'
+import ButtonSubmit from '@/components/UI/ButtonSubmit.vue'
 
 import { computed } from 'vue'
 import { type PropType } from 'vue'

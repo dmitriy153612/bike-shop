@@ -22,7 +22,7 @@
 
 <script lang="ts" setup>
 import { ref, onMounted, type Ref } from 'vue'
-import ButtonReset from '@/components/ButtonReset.vue'
+import ButtonReset from '@/components/UI/ButtonReset.vue'
 
 const emit = defineEmits(['closeModal', 'action'])
 

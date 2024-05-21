@@ -42,8 +42,8 @@
 
 <script lang="ts" setup>
 import { ref, onMounted, type Ref } from 'vue'
-import ButtonSubmit from '@/components/ButtonSubmit.vue'
-import AppInput from '@/components/AppInput.vue'
+import ButtonSubmit from '@/components/UI/ButtonSubmit.vue'
+import AppInput from '@/components/UI/AppInput.vue'
 import { useRegistrationStore } from '@/stores/registrationStore'
 import validateEmail from '@/helpers/validateEmail'
 import validatePassword from '@/helpers/validatePassword'

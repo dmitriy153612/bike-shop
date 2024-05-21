@@ -3,7 +3,9 @@
     <the-svg-sprite />
     <the-header />
     <div class="app__content">
+      
       <router-view />
+
       <transition name="appear">
         <app-spinner v-if="globalStore.isMainSpinnerShown" />
       </transition>
@@ -13,8 +15,8 @@
 </template>
 
 <script lang="ts" setup>
-import TheHeader from '@/components/TheHeader.vue'
-import TheFooter from '@/components/TheFooter.vue'
+import TheHeader from '@/components/header/TheHeader.vue'
+import TheFooter from '@/components/footer/TheFooter.vue'
 import AppSpinner from '@/components/AppSpinner.vue'
 import TheSvgSprite from '@/components/TheSvgSprite.vue'
 import { useGlobalStore } from '@/stores/globalStore'

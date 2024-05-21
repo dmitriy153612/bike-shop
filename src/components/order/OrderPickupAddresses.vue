@@ -23,7 +23,7 @@
 </template>
 
 <script lang="ts" setup>
-import SwitcherBtn from '@/components/SwitcherBtn.vue'
+import SwitcherBtn from '@/components/UI/SwitcherBtn.vue'
 import { useOrderStore } from '@/stores/orderStore'
 import { type PropType, computed } from 'vue'
 import { type Pickpoint } from '@/interfaces/OrderInterfaces'

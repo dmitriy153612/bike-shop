@@ -56,12 +56,12 @@
 
 <script lang="ts" setup>
 import { ref, watch, computed, watchEffect, reactive, type Ref } from 'vue'
-import PageStructure from '@/components/PageStructure.vue'
-import AppContainer from '@/components/AppContainer.vue'
-import CartOrderForm from '@/components/CartOrderForm.vue'
-import ButtonSubmit from '@/components/ButtonSubmit.vue'
-import OrderList from '@/components/OrderList.vue'
-import OrderPlacing from '@/components/OrderPlacing.vue'
+import PageStructure from '@/components/layouts/PageStructure.vue'
+import AppContainer from '@/components/layouts/AppContainer.vue'
+import CartOrderForm from '@/components/cart/CartOrderForm.vue'
+import ButtonSubmit from '@/components/UI/ButtonSubmit.vue'
+import OrderList from '@/components/order/OrderList.vue'
+import OrderPlacing from '@/components/order/OrderPlacing.vue'
 import { onBeforeRouteLeave } from 'vue-router'
 import { useOrderStore } from '@/stores/orderStore'
 import { useCartStore } from '@/stores/cartStore'

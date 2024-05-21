@@ -99,15 +99,15 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue'
 import { lockScroll } from '@/helpers/lockScroll'
-import PageStructure from '@/components/PageStructure.vue'
-import AppCheckbox from '@/components/AppCheckbox.vue'
-import ButtonCross from '@/components/ButtonCross.vue'
-import AppContainer from '@/components/AppContainer.vue'
-import CartProduct from '@/components/CartProduct.vue'
-import AppModal from '@/components/AppModal.vue'
-import ConfirmForm from '@/components/ConfirmForm.vue'
-import CartOrderForm from '@/components/CartOrderForm.vue'
-import ButtonSubmit from '@/components/ButtonSubmit.vue'
+import PageStructure from '@/components/layouts/PageStructure.vue'
+import AppCheckbox from '@/components/UI/AppCheckbox.vue'
+import ButtonCross from '@/components/UI/ButtonCross.vue'
+import AppContainer from '@/components/layouts/AppContainer.vue'
+import CartProduct from '@/components/cart/CartProduct.vue'
+import AppModal from '@/components/modal/AppModal.vue'
+import ConfirmForm from '@/components/modal/ConfirmForm.vue'
+import CartOrderForm from '@/components/cart/CartOrderForm.vue'
+import ButtonSubmit from '@/components/UI/ButtonSubmit.vue'
 import debounce from '@/helpers/debonce'
 import { useCartStore } from '@/stores/cartStore'
 import {
@@ -271,6 +271,7 @@ watch(
 
   &__message {
     justify-self: center;
+    font-size: 24px;
   }
 
   &__selection {

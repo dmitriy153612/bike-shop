@@ -42,7 +42,7 @@
 import { computed } from 'vue'
 import { type DeliveryType, type PaymentType } from '@/interfaces/OrderInterfaces'
 import formatCurrency from '@/helpers/formatCurrency'
-import SwitcherBtn from '@/components/SwitcherBtn.vue'
+import SwitcherBtn from '@/components/UI/SwitcherBtn.vue'
 
 const props = defineProps({
   values: { type: Array as () => DeliveryType[] | PaymentType[], required: true },

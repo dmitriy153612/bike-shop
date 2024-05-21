@@ -38,8 +38,8 @@
 </template>
 
 <script lang="ts" setup>
-import AppSizePicker from '@/components/AppSizePicker.vue'
-import ButtonSubmit from '@/components/ButtonSubmit.vue'
+import AppSizePicker from '@/components/UI/AppSizePicker.vue'
+import ButtonSubmit from '@/components/UI/ButtonSubmit.vue'
 import ColorIndicator from '@/components/ColorIndicator.vue'
 import AppPrice from '@/components/AppPrice.vue'
 import { useCartStore } from '@/stores/cartStore'

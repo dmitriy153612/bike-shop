@@ -18,7 +18,7 @@ import { type Size, type FilterName, type FilterParams } from '@/interfaces/Cata
 import { useGetQueryFromRoute } from '@/composables/getCatalogQueries'
 import { useFilterStore } from '@/stores/filterSore'
 import { useRoute, useRouter } from 'vue-router'
-import ButtonCross from '@/components/ButtonCross.vue'
+import ButtonCross from '@/components/UI/ButtonCross.vue'
 
 const { brands, colors, sizes } = toRefs(useFilterStore())
 const { getFilter } = useGetQueryFromRoute()

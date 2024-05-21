@@ -13,9 +13,9 @@
 </template>
 
 <script lang="ts" setup>
-import AppContainer from '@/components/AppContainer.vue'
+import AppContainer from '@/components/layouts/AppContainer.vue'
 import AppTitle from '@/components/AppTitle.vue'
-import AppBreadcrumbs from '@/components/AppBreadcrumbs.vue'
+import AppBreadcrumbs from '@/components/nav/AppBreadcrumbs.vue'
 import { type PropType } from 'vue'
 import { type Breadcrumbs } from '@/interfaces/BreadcrumbsInterface'
 

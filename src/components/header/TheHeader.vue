@@ -42,12 +42,12 @@
 
 <script lang="ts" setup>
 import { ref, computed, type Ref, type ComputedRef } from 'vue'
-import AppContainer from '@/components/AppContainer.vue'
+import AppContainer from '@/components/layouts/AppContainer.vue'
 import AppLogo from '@/components/AppLogo.vue'
-import HeaderLoginBtn from '@/components/HeaderLoginBtn.vue'
-import HeaderCartLink from '@/components/HeaderCartLink.vue'
-import AppModal from '@/components/AppModal.vue'
-import TheLoginForm from '@/components/TheLoginForm.vue'
+import HeaderLoginBtn from '@/components/header/HeaderLoginBtn.vue'
+import HeaderCartLink from '@/components/header/HeaderCartLink.vue'
+import AppModal from '@/components/modal/AppModal.vue'
+import TheLoginForm from '@/components/modal/TheLoginForm.vue'
 import { lockScroll } from '@/helpers/lockScroll'
 import { useLoginStore } from '@/stores/loginStore'
 import { useCartStore } from '@/stores/cartStore'

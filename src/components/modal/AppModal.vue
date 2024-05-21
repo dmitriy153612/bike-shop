@@ -21,7 +21,7 @@
 </template>
 
 <script lang="ts" setup>
-import ButtonCross from '@/components/ButtonCross.vue'
+import ButtonCross from '@/components/UI/ButtonCross.vue'
 import { useGlobalStore } from '@/stores/globalStore'
 import { ref, onMounted, computed, watch, type PropType } from 'vue'
 

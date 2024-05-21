@@ -14,3 +14,6 @@ $hover-min-width: '(min-width: 769px)';
 $screen-huge: '(max-width: 1024px)';
 $screen-medium: '(max-width: 768px)';
 $screen-small: '(max-width: 568px)';
+
+$containerInlinePadding: 15px;
+$containerMinWidth: calc(375px + ($containerInlinePadding * 2));

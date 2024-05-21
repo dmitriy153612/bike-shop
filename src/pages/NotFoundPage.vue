@@ -1,14 +1,14 @@
 <template>
   <main class="not-found-page">
     <app-container class="not-found-page__container">
-      <Apptitle class="not-found-page__title"> Страница не найдена </Apptitle>
+      <AppTitle class="not-found-page__title"> Страница не найдена </AppTitle>
     </app-container>
   </main>
 </template>
 
 <script lang="ts" setup>
-import AppContainer from '@/components/AppContainer.vue'
-import Apptitle from '@/components/AppTitle.vue'
+import AppContainer from '@/components/layouts/AppContainer.vue'
+import AppTitle from '@/components/AppTitle.vue'
 import { useGlobalStore } from '@/stores/globalStore'
 
 const globalStore = useGlobalStore()

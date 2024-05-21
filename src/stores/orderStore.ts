@@ -88,6 +88,7 @@ export const useOrderStore = defineStore('orderStore', () => {
     if (!loginStore.token) {
       return
     }
+    
     try {
       isGetOrderConfigLoading.value = true
 
