@@ -1,22 +1,31 @@
 <template>
   <page-structure :breadcrumbs="breadcrumbs">
-    <div class="product-page" v-if="product">
+    <div class="product-page" v-if="isProductLoaded">
       <section class="product-page__sec">
         <app-container class="product-page__container">
           <app-title class="product-page__title">
             {{ title }}
           </app-title>
           <app-swiper class="product-page__swiper" :images-urls="imagesUrls" :title="title" />
-          <product-descr-box class="product-page__descr" :formatedBrandName="formatedBrandName"
-            :formatedSizeName="formatedSizeName" :colorName="colorName" :price="price" :oldPrice="oldPrice"
-            :showBtnSpinner="cartStore.isAddtoCartLoading" :sizes="sizes" v-model="sizeId" @add-to-cart="addToCart" />
+          <product-descr-box
+            class="product-page__descr"
+            :formatedBrandName="formatedBrandName"
+            :formatedSizeName="formatedSizeName"
+            :colorName="colorName"
+            :price="price"
+            :oldPrice="oldPrice"
+            :showBtnSpinner="cartStore.isAddtoCartLoading"
+            :sizes="sizes"
+            v-model="sizeId"
+            @add-to-cart="addToCart"
+          />
 
           <product-info class="product-page__info" :info-list="productInfoData" />
         </app-container>
       </section>
     </div>
 
-    <app-modal :show-modal="isProductError" @close-modal="closeErrorModal">
+    <app-modal @close="closeErrorModal" v-if="isProductError">
       <confirm-form confirm-name="Ok" message="Товар не найден" @action="closeErrorModal" />
     </app-modal>
   </page-structure>
@@ -144,13 +153,16 @@ watch(
   }
 )
 
-watch(() => productStore.error, (newValue) => {
-  if (newValue) {
-    isProductError.value = true
-  } else {
-    isProductError.value = false
+watch(
+  () => productStore.error,
+  (newValue) => {
+    if (newValue) {
+      isProductError.value = true
+    } else {
+      isProductError.value = false
+    }
   }
-})
+)
 </script>
 
 <style lang="scss" scoped>

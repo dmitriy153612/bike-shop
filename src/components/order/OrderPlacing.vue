@@ -4,7 +4,11 @@
       legend="Способ получения"
       class="order-placing__field order-placing__field--delivery-switcher"
     >
-      <order-switcher v-model="updatedSelectedDeliveryTypeId" :values="deliveryTypesList" />
+      <order-switcher
+        v-model="updatedSelectedDeliveryTypeId"
+        :values="deliveryTypesList"
+        name="obtaining"
+      />
     </app-fieldset>
 
     <app-fieldset
@@ -43,7 +47,11 @@
       legend="Способ оплаты"
       class="order-placing__field order-placing__field--paymant-switcher"
     >
-      <order-switcher v-model="updatedSelectedPaymentTypeId" :values="paymentTypesList" />
+      <order-switcher
+        v-model="updatedSelectedPaymentTypeId"
+        :values="paymentTypesList"
+        name="payment"
+      />
     </app-fieldset>
   </div>
 </template>

@@ -10,23 +10,18 @@
 import { computed } from 'vue'
 
 const props = defineProps({
-  type: { type: String, default: 'screen' }
+  type: { type: String as () => 'button' | 'card' | 'screen', default: 'screen' },
+  backgroundColor: { type: String, required: false }
 })
 
-enum SpinnerTypes {
-  button = 'button',
-  card = 'card'
-}
+const typeClass = computed(() => ({
+  'spinner-overlay--button-spinner': props.type === 'button',
+  'spinner-overlay--card-spinner': props.type === 'card',
+  'spinner-overlay--screen-spinner': props.type === 'screen',
+  'spinner-overlay--bg-color': props.backgroundColor
+}))
 
-const typeClass = computed(() => {
-  if (props.type === SpinnerTypes.button) {
-    return 'spinner-overlay--button-spinner'
-  } else if (props.type === SpinnerTypes.card) {
-    return 'spinner-overlay--card-spinner'
-  } else {
-    return 'spinner-overlay--screen-spinner'
-  }
-})
+const bgColor = computed(() => props.backgroundColor)
 </script>
 
 <style lang="scss" scoped>
@@ -93,6 +88,10 @@ const typeClass = computed(() => {
       width: 80px;
       height: 80px;
     }
+  }
+
+  &--bg-color {
+    background-color: v-bind(bgColor);
   }
 
   &__spinner-wrapper {

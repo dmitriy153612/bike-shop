@@ -4,15 +4,18 @@
       <app-title class="catalog-page__title"> Mountain bikes </app-title>
       <transition name="appear-left">
         <aside class="catalog-page__aside" v-if="isFilterLoaded">
-          <transition name="appear">
-            <catalog-filter
-              v-if="isFilterVisible"
-              class="catalog-page__filter"
-              :colors="filterSore.colors"
-              :sizes="filterSore.sizes"
-              :brands="filterSore.brands"
-            />
-          </transition>
+          <teleport to="body" :disabled="isFilterOverlayDisabled">
+            <transition name="appear">
+              <catalog-filter
+                v-if="isFilterVisible"
+                class="catalog-page__filter"
+                :is-overlay-disabled="isFilterOverlayDisabled"
+                :colors="filterSore.colors"
+                :sizes="filterSore.sizes"
+                :brands="filterSore.brands"
+              />
+            </transition>
+          </teleport>
         </aside>
       </transition>
       <transition name="appear-top">
@@ -66,32 +69,18 @@ import AppliedFilters from '@/components/catalog/CatalogAppliedFilters.vue'
 import { useCatalogStore } from '@/stores/catalogStore'
 import { useFilterStore } from '@/stores/filterSore'
 import { useGlobalStore } from '@/stores/globalStore'
-import { computed, ref, watchEffect, watch, onMounted, onUnmounted } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import {
-  type CatalogPageParams,
-  type SortingItem,
-  type CatalogConfig
-} from '@/interfaces/CatalogInterfaces'
+import { type SortingItem, type CatalogConfig } from '@/interfaces/CatalogInterfaces'
 
 const route = useRoute()
 const router = useRouter()
 const filterSore = useFilterStore()
 const catalogStore = useCatalogStore()
 const globalStore = useGlobalStore()
-
 const { getAllCatalogQueries } = useGetQueryFromRoute()
 
 const sortingId = ref<string>('')
-const catalogParams = ref<CatalogPageParams>({
-  colorId: [],
-  sizeId: [],
-  brandId: [],
-  minPrice: 0,
-  maxPrice: 0,
-  page: 1,
-  sorting: ''
-})
 
 const sortingArr: SortingItem[] = [
   { label: 'По релевантности', id: '' },
@@ -99,16 +88,20 @@ const sortingArr: SortingItem[] = [
   { label: 'Цена по убыванию', id: 'priceDown' }
 ]
 
-const screenWidth = ref<number>(window.innerWidth)
-
-filterSore.fetchColors()
-filterSore.fetchSizes()
-filterSore.fetchBrands()
+const isFilterOverlayDisabled = computed(() => {
+  if (
+    globalStore.screenWidth > 1024 ||
+    (globalStore.screenWidth <= 1024 && !globalStore.isfilterOpen)
+  ) {
+    return true
+  }
+  return false
+})
 
 const isFilterVisible = computed(() => {
-  if (screenWidth.value > 1024) {
+  if (globalStore.screenWidth > 1024) {
     return true
-  } else if (screenWidth.value <= 1024 && globalStore.isfilterOpen) {
+  } else if (globalStore.screenWidth <= 1024 && globalStore.isfilterOpen) {
     return true
   }
   return false
@@ -139,57 +132,26 @@ const totalPages = computed<number>(() => {
   return 0
 })
 
+catalogStore.fetchCatalog(getAllCatalogQueries.value)
+
 function setSortingId(id: string) {
   sortingId.value = id
 }
 
-function handleResize() {
-  screenWidth.value = window.innerWidth
-}
-
-watchEffect(() => {
-  if (route.name === 'catalog') {
-    if (!route.query['page']) {
-      router.replace({ query: { ...route.query, page: 1 } })
-    }
-    catalogParams.value = getAllCatalogQueries.value
-    catalogStore.fetchCatalog(catalogParams.value)
+watch(
+  () => route.query,
+  () => {
+    catalogStore.fetchCatalog(getAllCatalogQueries.value)
   }
-})
+)
 
 watch(
   () => sortingId.value,
-  (newValue) => {
-    router.replace({ query: { ...route.query, sorting: newValue || undefined } })
-  },
-  { deep: true }
+  () => {
+    const sort = sortingId.value ? sortingId.value : undefined
+    router.replace({ query: { ...route.query, sorting: sort } })
+  }
 )
-
-watch(
-  () => route.query['sorting'],
-  (newValue) => {
-    if (!newValue) {
-      const firstElemFromSortingArr: SortingItem | undefined = sortingArr[0]
-      if (firstElemFromSortingArr) {
-        setSortingId(firstElemFromSortingArr.id)
-      }
-    } else {
-      const sortingObj: SortingItem | undefined = sortingArr.find((obj) => obj.id === newValue)
-      if (sortingObj) {
-        setSortingId(sortingObj.id)
-      }
-    }
-  },
-  { immediate: true }
-)
-
-onMounted(() => {
-  window.addEventListener('resize', handleResize)
-})
-
-onUnmounted(() => {
-  window.removeEventListener('resize', handleResize)
-})
 </script>
 
 <style lang="scss" scoped>

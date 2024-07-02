@@ -13,6 +13,7 @@
       class="switcher-btn__input"
       type="radio"
       :value="value"
+      :name="name"
       v-model="updatedId"
     />
     <label :for="`switcher-btn${value}`" class="switcher-btn__label">
@@ -27,7 +28,8 @@ import { computed } from 'vue'
 const props = defineProps({
   modelValue: { type: String, required: true },
   value: { type: String, required: true },
-  disabled: { type: Boolean, default: false }
+  disabled: { type: Boolean, default: false },
+  name: { type: String, required: true }
 })
 
 const emit = defineEmits(['update:modelValue'])

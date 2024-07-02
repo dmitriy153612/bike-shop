@@ -72,10 +72,10 @@ export const useCartStore = defineStore('cartStore', () => {
   async function fetchAddToCart({ productId, sizeId, amount }: AddedToCartProduct): Promise<void> {
     try {
       if (!loginStore.token) {
-        globalStore.openLoginModal(true)
-        throw new Error('No access')
+        return
       }
       isAddtoCartLoading.value = true
+
       const res: AxiosResponse<{ totalCartAmount: number }> = await axios.post(
         `${BASE_API_URL}${CART_ADD_PATH}`,
         { productId, sizeId, amount },

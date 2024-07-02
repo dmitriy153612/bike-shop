@@ -8,7 +8,7 @@
     </h3>
     <div class="user-form__inputs">
       <app-input
-        ref="emailinputEl"
+        :focus="true"
         v-model="email"
         class="user-form__input"
         input-type="email"
@@ -39,7 +39,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, computed, onUnmounted, type Ref } from 'vue'
+import { ref, computed, onUnmounted } from 'vue'
 import ButtonSubmit from '@/components/UI/ButtonSubmit.vue'
 import AppInput from '@/components/UI/AppInput.vue'
 import { useLoginStore } from '@/stores/loginStore'
@@ -57,8 +57,6 @@ const password = ref<string>('')
 
 const emailError = ref<string>('')
 const passwordError = ref<string>('')
-
-const emailinputEl: Ref<{ element: HTMLElement | null } | null> = ref(null)
 
 const registrationStore = useRegistrationStore()
 const loginStore = useLoginStore()
@@ -94,12 +92,6 @@ function showRegistrationForm() {
   emit('showRegistrationForm', false)
 }
 
-onMounted(() => {
-  if (emailinputEl.value && emailinputEl.value.element) {
-    emailinputEl.value.element.focus()
-  }
-})
-
 onUnmounted(() => {
   registrationStore.toggleRegistrationSuccess(false)
 })
@@ -110,7 +102,7 @@ onUnmounted(() => {
 
 .user-form {
   display: grid;
-
+  width: 100%;
   &__title {
     margin: 0;
     padding-bottom: 10px;
@@ -126,6 +118,7 @@ onUnmounted(() => {
 
   &__btn-submit {
     justify-self: flex-start;
+    margin-bottom: 10px;
   }
 
   &__account-btn {

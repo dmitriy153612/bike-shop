@@ -1,5 +1,5 @@
 <template>
-  <button ref="element" class="login-btn">
+  <button class="login-btn">
     <svg v-if="svgId" class="login-btn__svg">
       <use xlink:href="#user" />
     </svg>
@@ -8,16 +8,10 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
-
 defineProps({
   svgId: { type: String, default: null },
   btnText: { type: String, default: null }
 })
-
-const element = ref<HTMLButtonElement | null>(null)
-
-defineExpose({ element })
 </script>
 
 <style lang="scss" scoped>

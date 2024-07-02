@@ -3,7 +3,6 @@
     <the-svg-sprite />
     <the-header />
     <div class="app__content">
-      
       <router-view />
 
       <transition name="appear">

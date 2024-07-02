@@ -13,42 +13,35 @@
             <use xlink:href="#filter" />
           </svg>
         </button>
-        <router-link class="header__catalog-link" :to="{ name: 'catalog' }">
+        <router-link class="header__catalog-link" :to="{ name: 'catalog', query: { page: 1 } }">
           Bike-Shop
         </router-link>
         <app-logo class="header__logo" />
 
         <div class="header__user-links">
-          <header-login-btn
-            ref="loginBtnComponentRef"
-            svg-id="#user"
-            :btn-text="btnLoginText"
-            @click.prevent="openModal"
-          />
+          <header-login-btn svg-id="#user" :btn-text="btnLoginText" @click.prevent="openModal" />
           <header-cart-link v-if="token" :amount="cartAmount" />
         </div>
       </div>
     </app-container>
   </header>
-
-  <app-modal
-    :btn-open-modal="loginBtnElem"
-    :show-modal="isLoginModalOpen"
-    @close-modal="closeModal"
-  >
-    <the-login-form />
-  </app-modal>
+  <teleport to="body">
+    <transition name="appear">
+      <app-modal @close="closeModal" v-if="isLoginModalOpen">
+        <the-login-form />
+      </app-modal>
+    </transition>
+  </teleport>
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, type Ref, type ComputedRef } from 'vue'
+import { computed, type ComputedRef } from 'vue'
 import AppContainer from '@/components/layouts/AppContainer.vue'
 import AppLogo from '@/components/AppLogo.vue'
 import HeaderLoginBtn from '@/components/header/HeaderLoginBtn.vue'
 import HeaderCartLink from '@/components/header/HeaderCartLink.vue'
 import AppModal from '@/components/modal/AppModal.vue'
 import TheLoginForm from '@/components/modal/TheLoginForm.vue'
-import { lockScroll } from '@/helpers/lockScroll'
 import { useLoginStore } from '@/stores/loginStore'
 import { useCartStore } from '@/stores/cartStore'
 import { useGlobalStore } from '@/stores/globalStore'
@@ -57,12 +50,6 @@ import { useRoute } from 'vue-router'
 const loginStore = useLoginStore()
 const cartStore = useCartStore()
 const globalStore = useGlobalStore()
-
-const loginBtnComponentRef: Ref<{ element: HTMLButtonElement | null }> = ref({
-  element: null
-})
-
-const loginBtnElem = computed<HTMLButtonElement | null>(() => loginBtnComponentRef.value.element)
 
 const token = computed<string>(() => loginStore.token)
 const cartAmount = computed<number>(() => cartStore.cartAmount)
@@ -80,13 +67,12 @@ function closeModal(): void {
   globalStore.openLoginModal(false)
 }
 
-function openModal(): void {
-  globalStore.openLoginModal(true)
+function openModal(e: Event): void {
+  globalStore.openLoginModal(true, e)
 }
 
-function openFilter() {
-  lockScroll(true)
-  globalStore.toggleFilter()
+function openFilter(e: Event) {
+  globalStore.toggleFilter(e)
 }
 </script>
 

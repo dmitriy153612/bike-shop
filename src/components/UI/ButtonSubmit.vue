@@ -76,9 +76,5 @@ defineProps({
   &:active {
     color: $grenadier;
   }
-
-  @media #{$screen-huge} {
-    font-size: 22px;
-  }
 }
 </style>

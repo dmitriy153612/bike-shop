@@ -1,7 +1,7 @@
 <template>
   <ul class="pickup-addresses" :options="scrollbarOptions">
     <li v-for="(item, index) in pickupList" :key="index" class="pickup-addresses__item">
-      <switcher-btn :value="item._id" v-model="updatedModelValue">
+      <switcher-btn :value="item._id" v-model="updatedModelValue" name="pickup">
         <div class="pickup-addresses__inner">
           <span class="pickup-addresses__metro-box">
             <svg class="pickup-addresses__svg" :fill="item.lineColor">

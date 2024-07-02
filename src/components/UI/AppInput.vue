@@ -10,9 +10,9 @@
   >
     <div class="app-input__inner">
       <input
+        ref="inputEl"
         :id="uniqId('input')"
         class="app-input__input"
-        ref="element"
         v-model="localValue"
         :type="type"
         :inputType="inputType"
@@ -41,7 +41,7 @@
 </template>
 
 <script lang="ts" setup>
-import { watch, ref, computed } from 'vue'
+import { watch, ref, computed, onMounted } from 'vue'
 import getUniqueId from '@/helpers/getUniqueId'
 
 enum InputTypes {
@@ -54,10 +54,13 @@ enum InputTypes {
 }
 
 type Format = {
-  [InputTypes.numeric]: (value: string) => { formatedEmitValue: number, formatedLocalValue: string },
-  [InputTypes.currency]: (value: string) => { formatedEmitValue: number, formatedLocalValue: string },
-  [InputTypes.tel]: (value: string) => { formatedEmitValue: string, formatedLocalValue: string },
-};
+  [InputTypes.numeric]: (value: string) => { formatedEmitValue: number; formatedLocalValue: string }
+  [InputTypes.currency]: (value: string) => {
+    formatedEmitValue: number
+    formatedLocalValue: string
+  }
+  [InputTypes.tel]: (value: string) => { formatedEmitValue: string; formatedLocalValue: string }
+}
 
 const props = defineProps({
   label: { type: String, default: null },
@@ -65,19 +68,21 @@ const props = defineProps({
   required: { type: Boolean, default: false },
   inputType: {
     type: String as () => keyof typeof InputTypes,
-    default: 'text' as InputTypes.text,
+    default: 'text' as InputTypes.text
   },
   telMsk: { type: String, default: '+7 (###) ### ## ##' },
   error: { type: String, default: null },
-  disabled: { type: Boolean, default: false }
+  disabled: { type: Boolean, default: false },
+  focus: { type: Boolean, default: false }
 })
 
 const emit = defineEmits(['update:modelValue', 'removeError'])
 
-const element = ref<HTMLInputElement | null>(null)
 const isInputFocused = ref<boolean>(false)
 const showPassword = ref<boolean>(false)
 const localValue = ref<string>('')
+
+const inputEl = ref<HTMLInputElement | null>(null)
 
 const type = computed(() => {
   if (props.inputType === InputTypes.password && !showPassword.value) {
@@ -98,16 +103,16 @@ function removeError() {
 const format: Format = {
   numeric: (value) => ({
     formatedEmitValue: Number(toNumericString(value)),
-    formatedLocalValue: toNumericString(value),
+    formatedLocalValue: toNumericString(value)
   }),
   currency: (value) => ({
     formatedEmitValue: Number(toNumericString(value)),
-    formatedLocalValue: toCurrencyString(value),
+    formatedLocalValue: toCurrencyString(value)
   }),
   tel: (value) => ({
     formatedEmitValue: toNumericString(value),
-    formatedLocalValue: toTelMask(value),
-  }),
+    formatedLocalValue: toTelMask(value)
+  })
 }
 
 function toNumericString(value: string): string {
@@ -129,11 +134,11 @@ function toTelMask(value: string): string {
   }
 
   if (numericValueArr[0] === '8') {
-     numericValueArr.shift()
+    numericValueArr.shift()
   }
 
-  numericValueArr.forEach(num => {
-    const maskIndex = maskedArr.findIndex(char => char === CHAR)
+  numericValueArr.forEach((num) => {
+    const maskIndex = maskedArr.findIndex((char) => char === CHAR)
 
     if (maskIndex > -1) {
       maskedArr[maskIndex] = num
@@ -142,7 +147,7 @@ function toTelMask(value: string): string {
 
   const reversedMaskArr = [...maskedArr].reverse()
 
-  const lastNumberIndex = reversedMaskArr.findIndex(char => !isNaN(parseInt(char)))
+  const lastNumberIndex = reversedMaskArr.findIndex((char) => !isNaN(parseInt(char)))
   const maskedString = reversedMaskArr.slice(lastNumberIndex).reverse().join('')
 
   return maskedString
@@ -155,20 +160,9 @@ function formatEmitValue(value: string, inputType: keyof typeof InputTypes) {
 
   return {
     formatedEmitValue: value,
-    formatedLocalValue: value,
-  };
+    formatedLocalValue: value
+  }
 }
-
-
-watch(() => props.modelValue, (newValue) => {
-  localValue.value = newValue.toString()
-}, { immediate: true })
-
-watch(() => localValue.value, (newValue) => {
-  const { formatedLocalValue, formatedEmitValue } = formatEmitValue(newValue, props.inputType)
-  localValue.value = formatedLocalValue
-  emit('update:modelValue', formatedEmitValue)
-})
 
 function focusInput(): void {
   isInputFocused.value = true
@@ -177,7 +171,28 @@ function unFocusInput(): void {
   isInputFocused.value = false
 }
 
-defineExpose({ element })
+watch(
+  () => props.modelValue,
+  (newValue) => {
+    localValue.value = newValue.toString()
+  },
+  { immediate: true }
+)
+
+watch(
+  () => localValue.value,
+  (newValue) => {
+    const { formatedLocalValue, formatedEmitValue } = formatEmitValue(newValue, props.inputType)
+    localValue.value = formatedLocalValue
+    emit('update:modelValue', formatedEmitValue)
+  }
+)
+
+onMounted(() => {
+  if (props.focus && inputEl.value) {
+    inputEl.value.focus()
+  }
+})
 </script>
 
 <style lang="scss" scoped>
@@ -232,10 +247,7 @@ defineExpose({ element })
     width: 100%;
     outline: none;
     overflow-x: hidden;
-
-    @media #{$screen-huge} {
-      font-size: 20px;
-    }
+    font-size: 20px;
   }
 
   &__label {

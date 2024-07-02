@@ -43,6 +43,8 @@ import ButtonSubmit from '@/components/UI/ButtonSubmit.vue'
 import ColorIndicator from '@/components/ColorIndicator.vue'
 import AppPrice from '@/components/AppPrice.vue'
 import { useCartStore } from '@/stores/cartStore'
+import { useGlobalStore } from '@/stores/globalStore'
+import { useLoginStore } from '@/stores/loginStore'
 import { type PropType, ref } from 'vue'
 import { type Size, type Color } from '@/interfaces/CatalogInterfaces'
 
@@ -58,24 +60,25 @@ const props = defineProps({
 })
 
 const cartStore = useCartStore()
+const globalStore = useGlobalStore()
+const loginStore = useLoginStore()
 
 const sizeId = ref<string>(props.sizes[0] ? props.sizes[0]._id : '')
 
 const showSpinner = ref<boolean>(false)
 
-async function addToCart(): Promise<void> {
-  try {
-    showSpinner.value = true
-    await cartStore.fetchAddToCart({
-      productId: props.id,
-      sizeId: sizeId.value,
-      amount: 1
-    })
-  } catch (err) {
-    console.error(err)
-  } finally {
-    showSpinner.value = false
+async function addToCart(e: Event): Promise<void> {
+  if (!loginStore.token) {
+    globalStore.openLoginModal(true, e)
+    return
   }
+  showSpinner.value = true
+  await cartStore.fetchAddToCart({
+    productId: props.id,
+    sizeId: sizeId.value,
+    amount: 1
+  })
+  showSpinner.value = false
 }
 </script>
 

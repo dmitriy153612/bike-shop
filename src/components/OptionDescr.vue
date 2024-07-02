@@ -44,7 +44,7 @@ const formattedOptionValue = computed(() => {
   }
 
   &__value {
-    white-space: wrap;
+    white-space: nowrap;
 
     &--red {
       color: $grenadier;

@@ -4,6 +4,7 @@
       <switcher-btn
         class="order-switcher__btn"
         :value="item._id"
+        :name="name"
         :disabled="!item.available"
         v-model="updatedId"
       >
@@ -46,7 +47,8 @@ import SwitcherBtn from '@/components/UI/SwitcherBtn.vue'
 
 const props = defineProps({
   values: { type: Array as () => DeliveryType[] | PaymentType[], required: true },
-  modelValue: { type: String, required: true }
+  modelValue: { type: String, required: true },
+  name: { type: String, required: true }
 })
 
 const emit = defineEmits(['update:modelValue'])

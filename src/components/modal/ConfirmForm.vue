@@ -5,7 +5,6 @@
     </h3>
     <div class="form-confirm__buttons">
       <button-reset
-        ref="confirmBtnComponent"
         class="form-confirm__btn"
         :btn-name="confirmName"
         @click.prevent="transferEvent"
@@ -21,10 +20,9 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, type Ref } from 'vue'
 import ButtonReset from '@/components/UI/ButtonReset.vue'
 
-const emit = defineEmits(['closeModal', 'action'])
+const emit = defineEmits(['close', 'action'])
 
 defineProps({
   confirmName: { type: String, required: true },
@@ -32,21 +30,13 @@ defineProps({
   message: { type: String, required: true }
 })
 
-const confirmBtnComponent: Ref<{ element: HTMLButtonElement | null } | null> = ref(null)
-
 function transferEvent() {
   emit('action')
 }
 
 function closeModal() {
-  emit('closeModal')
+  emit('close')
 }
-
-onMounted(() => {
-  if (confirmBtnComponent.value && confirmBtnComponent.value.element) {
-    confirmBtnComponent.value.element.focus()
-  }
-})
 </script>
 
 <style lang="scss" scoped>
@@ -57,7 +47,7 @@ onMounted(() => {
   grid-template-columns: 1fr 1fr;
   column-gap: 10px;
   padding-bottom: 20px;
-
+  width: 100%;
   &__title {
     grid-column: 1 / 3;
     margin: 0;
@@ -76,6 +66,7 @@ onMounted(() => {
     display: flex;
     justify-content: center;
     column-gap: 10px;
+    width: 100%;
   }
 
   &__btn {

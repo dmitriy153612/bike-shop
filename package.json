@@ -18,6 +18,7 @@
     "sass": "^1.69.5",
     "swiper": "^11.0.3",
     "vue": "^3.4.21",
+    "vue-focus-lock": "^3.0.0",
     "vue-router": "^4.3.0"
   },
   "devDependencies": {

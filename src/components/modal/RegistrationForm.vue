@@ -3,7 +3,7 @@
     <h3 class="user-form__title">Регистрация</h3>
     <div class="user-form__inputs">
       <app-input
-        ref="emailInputEl"
+        :focus="true"
         v-model="email"
         class="user-form__input"
         input-type="email"
@@ -41,7 +41,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, type Ref } from 'vue'
+import { ref } from 'vue'
 import ButtonSubmit from '@/components/UI/ButtonSubmit.vue'
 import AppInput from '@/components/UI/AppInput.vue'
 import { useRegistrationStore } from '@/stores/registrationStore'
@@ -55,8 +55,6 @@ const registrationStore = useRegistrationStore()
 const email = ref<string>('')
 const password = ref<string>('')
 const passwordConfirm = ref<string>('')
-
-const emailInputEl: Ref<{ element: HTMLElement | null } | null> = ref(null)
 
 const emailError = ref<string>('')
 const passwordError = ref<string>('')
@@ -100,12 +98,6 @@ async function register(): Promise<void> {
 function showLoginForm() {
   emit('showLoginForm', true)
 }
-
-onMounted(() => {
-  if (emailInputEl.value && emailInputEl.value.element) {
-    emailInputEl.value.element.focus()
-  }
-})
 </script>
 
 <style lang="scss" scoped>
@@ -113,7 +105,7 @@ onMounted(() => {
 
 .user-form {
   display: grid;
-
+  width: 100%;
   &__title {
     margin: 0;
     padding-bottom: 10px;
@@ -129,6 +121,7 @@ onMounted(() => {
 
   &__btn-submit {
     justify-self: flex-start;
+    margin-bottom: 10px;
   }
 
   &__account-btn {

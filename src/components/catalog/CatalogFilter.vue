@@ -1,43 +1,44 @@
 <template>
-  <div class="filter" @click.self="closeFilter">
-    <div class="filter__inner" ref="filterElem">
-      <button-cross
-        class="filter__btn-close"
-        aria-label="Закрыть фильтр товаров"
-        ref="btnCloseElem"
-        @click.prevent="closeFilter"
-      />
-      <form class="filter__form" @submit.prevent="setFilterToRoute">
-        <div class="filter__form-inner">
-          <h2 class="filter__title">Фильтр</h2>
-          <catalog-filter-fieldset v-if="brands.length" class="filter__brand" legend="Бренд">
-            <checkbox-list v-model="filterParams.brandId" :properties="brands" />
-          </catalog-filter-fieldset>
-          <catalog-filter-fieldset v-if="sizes.length" class="filter__size" legend="Размер">
-            <checkbox-list v-model="filterParams.sizeId" :properties="sizes" />
-          </catalog-filter-fieldset>
-          <catalog-filter-fieldset v-if="colors.length" class="filter__color" legend="Цвет">
-            <checkbox-list v-model="filterParams.colorId" :properties="colors" />
-          </catalog-filter-fieldset>
-          <div class="filter__price-box">
-            <app-input v-model="filterParams.minPrice" input-type="currency" label="Цена от" />
-            <app-input v-model="filterParams.maxPrice" input-type="currency" label="Цена до" />
+  <app-overlay @close="closeFilter" :disabled="isOverlayDisabled">
+    <div class="filter">
+      <div class="filter__inner">
+        <button-cross
+          class="filter__btn-close"
+          aria-label="Закрыть фильтр товаров"
+          @click.prevent="closeFilter"
+        />
+        <form class="filter__form" @submit.prevent="setFilterToRoute">
+          <div class="filter__form-inner">
+            <h2 class="filter__title">Фильтр</h2>
+            <catalog-filter-fieldset v-if="brands.length" class="filter__brand" legend="Бренд">
+              <checkbox-list v-model="filterParams.brandId" :properties="brands" />
+            </catalog-filter-fieldset>
+            <catalog-filter-fieldset v-if="sizes.length" class="filter__size" legend="Размер">
+              <checkbox-list v-model="filterParams.sizeId" :properties="sizes" />
+            </catalog-filter-fieldset>
+            <catalog-filter-fieldset v-if="colors.length" class="filter__color" legend="Цвет">
+              <checkbox-list v-model="filterParams.colorId" :properties="colors" />
+            </catalog-filter-fieldset>
+            <div class="filter__price-box">
+              <app-input v-model="filterParams.minPrice" input-type="currency" label="Цена от" />
+              <app-input v-model="filterParams.maxPrice" input-type="currency" label="Цена до" />
+            </div>
+            <button-submit
+              type="submit"
+              class="filter__btn-submit"
+              btn-name="Применить"
+              @click.prevent="setFilterToRoute"
+            />
+            <button-reset
+              class="filter__btn-reset"
+              btn-name="Сбросить"
+              @click.prevent="resetFilter"
+            />
           </div>
-          <button-submit
-            type="submit"
-            class="filter__btn-submit"
-            btn-name="Применить"
-            @click.prevent="setFilterToRoute"
-          />
-          <button-reset
-            class="filter__btn-reset"
-            btn-name="Сбросить"
-            @click.prevent="resetFilter"
-          />
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
-  </div>
+  </app-overlay>
 </template>
 
 <script lang="ts" setup>
@@ -46,8 +47,8 @@ import CheckboxList from '@/components/UI/CheckboxList.vue'
 import ButtonSubmit from '@/components/UI/ButtonSubmit.vue'
 import ButtonReset from '@/components/UI/ButtonReset.vue'
 import ButtonCross from '@/components/UI/ButtonCross.vue'
-import { lockScroll } from '@/helpers/lockScroll'
-import { type PropType, ref, watch, onUnmounted, nextTick } from 'vue'
+import AppOverlay from '@/components/layouts/AppOverlay.vue'
+import { type PropType, ref, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useGetQueryFromRoute } from '@/composables/getCatalogQueries'
 import AppInput from '@/components/UI/AppInput.vue'
@@ -63,7 +64,8 @@ import {
 defineProps({
   colors: { type: Array as PropType<Color[]>, required: true },
   sizes: { type: Array as PropType<Size[]>, required: true },
-  brands: { type: Array as PropType<Brand[]>, required: true }
+  brands: { type: Array as PropType<Brand[]>, required: true },
+  isOverlayDisabled: { type: Boolean, default: false }
 })
 
 const route = useRoute()
@@ -80,9 +82,6 @@ const filterParams = ref<CatalogPageParams>({
   maxPrice: 0,
   page: 1
 })
-
-const filterElem = ref<HTMLElement | null>(null)
-const btnCloseElem = ref<HTMLElement | null>(null)
 
 function resetFilter() {
   filterParams.value = {
@@ -122,28 +121,12 @@ function setFilterToRoute() {
   updateRoute(updatedParams)
 }
 
-function setFocusOnBtnOpenFilter() {
-  const btnOpenFilter: HTMLElement | null = document.getElementById('btn-filter')
-  if (btnOpenFilter) {
-    btnOpenFilter.focus()
-  }
-}
-
 function closeFilter() {
   const offsetWidth = Number(document.body.offsetWidth)
   if (offsetWidth > 1024) {
     return
   }
-  lockScroll(false)
   globalStore.toggleFilter()
-  document.removeEventListener('focusin', handleFocusIn)
-  setFocusOnBtnOpenFilter()
-}
-
-function closeFilterByEsc(event: KeyboardEvent) {
-  if (event.key === 'Escape') {
-    closeFilter()
-  }
 }
 
 function setQueryToFilter() {
@@ -152,60 +135,18 @@ function setQueryToFilter() {
 
 setQueryToFilter()
 
-function focusBtnClose() {
-  if (btnCloseElem.value && 'element' in btnCloseElem.value) {
-    const btnClose: HTMLElement = btnCloseElem.value.element as HTMLElement
-    nextTick(() => {
-      btnClose.focus()
-    })
-  }
-}
-
-function handleFocusIn(event: FocusEvent): void {
-  if (filterElem.value && !filterElem.value.contains(event.target as HTMLElement)) {
-    focusBtnClose()
-  }
-}
-
 watch(
   () => route.query,
   () => {
     setQueryToFilter()
   }
 )
-
-watch(
-  () => globalStore.isfilterOpen,
-  (newValue) => {
-    if (newValue) {
-      document.addEventListener('focusin', handleFocusIn)
-      focusBtnClose()
-    } else {
-      document.removeEventListener('focusin', handleFocusIn)
-    }
-  }
-)
-
-document.addEventListener('keydown', closeFilterByEsc)
-
-onUnmounted(() => document.removeEventListener('keydown', closeFilterByEsc))
 </script>
 
 <style lang="scss" scoped>
 @import '@/assets/style/config/variables.scss';
 
 .filter {
-  @media #{$screen-huge} {
-    position: fixed;
-    inset: 0;
-    z-index: 10;
-    display: flex;
-    padding-top: 70px;
-    padding-left: 20px;
-    background-color: rgba(0, 0, 0, 0.6);
-    overflow-y: auto;
-  }
-
   &__inner {
     position: relative;
   }
@@ -223,8 +164,8 @@ onUnmounted(() => document.removeEventListener('keydown', closeFilterByEsc))
 
   &__form {
     @media #{$screen-huge} {
+      max-height: 100%;
       height: max-content;
-      padding-bottom: 50px;
     }
   }
 

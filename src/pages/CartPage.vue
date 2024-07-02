@@ -71,24 +71,26 @@
                 />
               </cart-order-form>
             </div>
-
-            <app-modal :show-modal="isDeletionModalOpen" @close-modal="closeDeletionModal">
-              <confirm-form
-                confirm-name="Удалить"
-                cancel-name="Отмена"
-                message="Удалить выбранные товары?"
-                @close-modal="closeDeletionModal"
-                @action="removeProducts"
-              />
-            </app-modal>
-
-            <app-modal :show-modal="isOrderModalOpen" @close-modal="closeOrderModal">
-              <confirm-form
-                confirm-name="Ок"
-                message="Выберите товары для оформления"
-                @action="closeOrderModal"
-              />
-            </app-modal>
+            <teleport to="body">
+              <transition name="appear">
+                <app-modal @close="closeDeletionModal" v-if="isDeletionModalOpen">
+                  <confirm-form
+                    confirm-name="Удалить"
+                    cancel-name="Отмена"
+                    message="Удалить выбранные товары?"
+                    @close="closeDeletionModal"
+                    @action="removeProducts"
+                  />
+                </app-modal>
+                <app-modal @close="closeOrderModal" v-else-if="isOrderModalOpen">
+                  <confirm-form
+                    confirm-name="Ок"
+                    message="Выберите товары для оформления"
+                    @action="closeOrderModal"
+                  />
+                </app-modal>
+              </transition>
+            </teleport>
           </template>
         </app-container>
       </section>
@@ -98,7 +100,6 @@
 
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue'
-import { lockScroll } from '@/helpers/lockScroll'
 import PageStructure from '@/components/layouts/PageStructure.vue'
 import AppCheckbox from '@/components/UI/AppCheckbox.vue'
 import ButtonCross from '@/components/UI/ButtonCross.vue'
@@ -110,6 +111,7 @@ import CartOrderForm from '@/components/cart/CartOrderForm.vue'
 import ButtonSubmit from '@/components/UI/ButtonSubmit.vue'
 import debounce from '@/helpers/debonce'
 import { useCartStore } from '@/stores/cartStore'
+import { useGlobalStore } from '@/stores/globalStore'
 import {
   type SelectedCartItem,
   type CartConfig,
@@ -128,6 +130,7 @@ const breadcrumbs = ref([
 ])
 
 const cartStore = useCartStore()
+const globalStore = useGlobalStore()
 
 const isMainCheckboxSelected = ref(true)
 
@@ -187,17 +190,19 @@ function getCartIdsIsSelected(): SelectedCartItem[] {
 function closeDeletionModal(): void {
   isDeletionModalOpen.value = false
 }
-function openDeletionModal(): void {
+function openDeletionModal(e: Event): void {
   isDeletionModalOpen.value = true
+  globalStore.setBtnOpenModal(e)
 }
 
 function closeOrderModal(): void {
   isOrderModalOpen.value = false
 }
-function openOrderModal(): void {
+function openOrderModal(e: Event): void {
   const isSelectedProduct = cartIdsIsSelected.value.some((item) => item.selected)
   if (!isSelectedProduct) {
     isOrderModalOpen.value = true
+    globalStore.setBtnOpenModal(e)
   }
 }
 function toggleAllCheckboxes(): void {
@@ -231,13 +236,6 @@ watch(
   () => selectedCartItemsIds.value,
   (newValue) => {
     toggleMainCheckbox(newValue)
-  }
-)
-
-watch(
-  () => isOrderModalOpen.value,
-  (newValue) => {
-    lockScroll(newValue)
   }
 )
 </script>

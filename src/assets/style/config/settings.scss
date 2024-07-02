@@ -28,3 +28,7 @@ body {
   grid-template-rows: 1fr;
   min-height: 100vh;
 }
+* {
+  scrollbar-width: thin;
+  scrollbar-color: $white $black;
+}

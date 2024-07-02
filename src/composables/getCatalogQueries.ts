@@ -26,27 +26,26 @@ export function useGetQueryFromRoute() {
   const getSorting = computed(() => ({ sorting: route.query.sorting || '' }))
 
   const getPage = computed(() => {
-    const pageObj = { page: 1 }
-    const queryPage = route.query.page
-    if (queryPage && typeof queryPage === 'number') {
-      if (queryPage < 1) {
-        pageObj.page = 1
-      } else if (queryPage > pageAmount.value) {
-        pageObj.page = pageAmount.value
-      }
+    const queryPage = Number(route.query.page)
+    const pageObj = { page: queryPage }
+
+    if (pageAmount.value && queryPage > pageAmount.value) {
+      pageObj.page = pageAmount.value
+    }
+    if (queryPage < 1) {
+      pageObj.page = 1
     }
 
     return pageObj
   })
 
-  const getAllCatalogQueries = computed(
-    () =>
-      ({
-        ...getFilter.value,
-        ...getSorting.value,
-        ...getPage.value
-      }) as FilterParams
-  )
+  const getAllCatalogQueries = computed(() => {
+    return {
+      ...getFilter.value,
+      ...getSorting.value,
+      ...getPage.value
+    } as FilterParams
+  })
 
   function getArray(value: string | string[]): string[] {
     if (Array.isArray(value)) {

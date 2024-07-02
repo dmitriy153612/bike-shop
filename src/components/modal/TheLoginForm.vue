@@ -9,7 +9,7 @@
       confirm-name="Ok"
       cancel-name="Отмена"
       message="Выйти из аккаунта?"
-      @close-modal="closeModal"
+      @close="closeModal"
       @action="logout"
     />
   </transition>

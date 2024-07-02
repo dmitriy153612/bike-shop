@@ -1,16 +1,18 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { lockScroll } from '@/helpers/lockScroll'
+import { getBtnByClick } from '@/helpers/getBtnByClick'
 
 export const useGlobalStore = defineStore('globalStore', () => {
   const isLoginModalOpen = ref<boolean>(false)
   const isMainSpinnerShown = ref<boolean>(false)
   const isSelectedCartItemAmountChanging = ref<number>(0)
   const isfilterOpen = ref<boolean>(false)
+  const screenWidth = ref(window.innerWidth)
+  const btnOpenModal = ref<HTMLButtonElement | HTMLAnchorElement | null>(null)
 
-  function openLoginModal(isOpen: boolean): void {
-    lockScroll(isOpen)
+  function openLoginModal(isOpen: boolean, event: Event | null = null): void {
     isLoginModalOpen.value = isOpen
+    setBtnOpenModal(event)
   }
 
   function showSpinner(show: boolean): void {
@@ -21,9 +23,26 @@ export const useGlobalStore = defineStore('globalStore', () => {
     isSelectedCartItemAmountChanging.value += value
   }
 
-  function toggleFilter() {
+  function toggleFilter(event: Event | null = null) {
     isfilterOpen.value = !isfilterOpen.value
+    if (isfilterOpen.value) {
+      setBtnOpenModal(event)
+    }
   }
+
+  function setBtnOpenModal(e: Event | null = null) {
+    if (e) {
+      btnOpenModal.value = getBtnByClick(e)
+    }
+  }
+
+  function clearBtnOpen() {
+    btnOpenModal.value = null
+  }
+
+  window.addEventListener('resize', () => {
+    screenWidth.value = window.innerWidth
+  })
 
   return {
     isLoginModalOpen,
@@ -36,6 +55,12 @@ export const useGlobalStore = defineStore('globalStore', () => {
     updateIsSelectedCartItemAmountChanging,
 
     isfilterOpen,
-    toggleFilter
+    toggleFilter,
+
+    screenWidth,
+
+    setBtnOpenModal,
+    clearBtnOpen,
+    btnOpenModal
   }
 })
