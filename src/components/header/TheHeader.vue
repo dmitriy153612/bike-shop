@@ -85,7 +85,7 @@ function openFilter(e: Event) {
   top: 0;
   right: 0;
   left: 0;
-  padding-right: calc(17px - (100vw - 100%));
+  max-width: 100wv;
   background-color: $black;
 
   @media #{$screen-huge} {

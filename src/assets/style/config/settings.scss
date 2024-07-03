@@ -20,15 +20,16 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 body {
-  min-height: 100vh;
+  min-height: 100dvh;
 }
 
 #app {
   display: grid;
   grid-template-rows: 1fr;
-  min-height: 100vh;
+  min-height: 100dvh;
 }
+
 * {
   scrollbar-width: thin;
-  scrollbar-color: $white $black;
+  scrollbar-color: $boulder $black;
 }

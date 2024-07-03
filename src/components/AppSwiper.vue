@@ -18,8 +18,7 @@
     :modules="modules"
   >
     <swiper-slide v-for="(url, index) in imagesUrls" :key="index">
-      <img :src="url" :alt="title" @load="setIsImagesLoading(index)" />
-      <app-spinner background-color="white" v-if="!isImagesLoaded[index]" />
+      <img :src="url" :alt="title" />
     </swiper-slide>
   </swiper>
 </template>
@@ -28,7 +27,6 @@
 import { type PropType, ref } from 'vue'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { Pagination, Navigation } from 'swiper/modules'
-import AppSpinner from '@/components/AppSpinner.vue'
 
 defineProps({
   imagesUrls: { type: Array as PropType<string[]>, required: true },
@@ -36,13 +34,6 @@ defineProps({
 })
 
 const modules = ref([Navigation, Pagination])
-
-const isImagesLoaded = ref<boolean[]>([])
-
-function setIsImagesLoading(index: number) {
-  console.log(index)
-  isImagesLoaded.value[index] = true
-}
 </script>
 
 <style lang="scss" scoped>

@@ -4,12 +4,13 @@
     <the-header />
     <div class="app__content">
       <router-view />
-
+    </div>
+    <the-footer />
+    <teleport to="body">
       <transition name="appear">
         <app-spinner v-if="globalStore.isMainSpinnerShown" />
       </transition>
-    </div>
-    <the-footer />
+    </teleport>
   </div>
 </template>
 
