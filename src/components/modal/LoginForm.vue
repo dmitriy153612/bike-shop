@@ -98,7 +98,8 @@ onUnmounted(() => {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/style/config/variables.scss';
+@use 'sass:color';
+@use '@/assets/style/config/variables.scss' as *;
 
 .user-form {
   display: grid;
@@ -137,17 +138,17 @@ onUnmounted(() => {
   }
 
   &__account-btn:focus {
-    border-color: lighten($lochmara, 20%);
+    border-color: color.adjust($lochmara, $lightness: 20%);
   }
 
   @media #{$hover-min-width} {
     &__account-btn:hover {
-      color: lighten($lochmara, 20%);
+      color: color.adjust($lochmara, $lightness: 20%);
     }
   }
 
   &__account-btn:active {
-    color: lighten($lochmara, 40%);
+    color: color.adjust($lochmara, $lightness: 40%);
   }
 
   .app-input__input.focus + .app-input__label {

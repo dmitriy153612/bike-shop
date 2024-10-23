@@ -162,7 +162,7 @@ onBeforeUnmount(() => {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/style/config/variables.scss';
+@use '@/assets/style/config/variables.scss' as *;
 
 .select {
   position: relative;

@@ -83,7 +83,7 @@ async function addToCart(e: Event): Promise<void> {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/style/config/variables.scss';
+@use '@/assets/style/config/variables.scss' as *;
 
 .card {
   position: relative;

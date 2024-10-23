@@ -1,9 +1,8 @@
-@import './config/normalize.scss';
+@use './config/normalize.scss';
 
-@import './config/variables.scss';
-@import './config/settings.scss';
-@import './config/transitions.scss';
+@use './config/settings.scss' as *;
+@use './config/transitions.scss' as *;
 
-@import 'swiper/css';
-@import 'swiper/css/pagination';
-@import 'swiper/css/navigation';
+@use 'swiper/css';
+@use 'swiper/css/pagination';
+@use 'swiper/css/navigation';

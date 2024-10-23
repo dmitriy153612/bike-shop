@@ -101,7 +101,7 @@ function removeFilter(queryName: FilterName, filterId: string) {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/style/config/variables.scss';
+@use '@/assets/style/config/variables.scss' as *;
 
 .applied-filters {
   padding-top: 10px;

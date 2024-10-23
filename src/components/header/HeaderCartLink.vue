@@ -17,7 +17,7 @@ const ariaLabel = computed<string>(() => `Перейти в корзину. То
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/style/config/variables.scss';
+@use '@/assets/style/config/variables.scss' as *;
 
 .cart-link {
   position: relative;
@@ -34,6 +34,8 @@ const ariaLabel = computed<string>(() => `Перейти в корзину. То
   transition-property: border-color color;
   transition-duration: 0.2s;
   transition-timing-function: ease;
+
+  cursor: pointer;
 
   &:focus {
     border-color: $sunglow;
@@ -57,7 +59,7 @@ const ariaLabel = computed<string>(() => `Перейти в корзину. То
     stroke: $grenadier;
   }
 
-  cursor: pointer;
+  
 
   &__svg {
     display: block;

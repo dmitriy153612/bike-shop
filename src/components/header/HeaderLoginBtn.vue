@@ -15,7 +15,7 @@ defineProps({
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/style/config/variables.scss';
+@use '@/assets/style/config/variables.scss' as *;
 
 .login-btn {
   display: flex;
@@ -54,7 +54,9 @@ defineProps({
     stroke: $grenadier;
   }
 
-  cursor: pointer;
+  & {
+    cursor: pointer;
+  }
 
   &__svg {
     display: block;

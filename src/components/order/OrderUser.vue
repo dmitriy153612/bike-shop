@@ -61,7 +61,7 @@ const updatedUserDataErrors = computed({
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/style/config/variables.scss';
+@use '@/assets/style/config/variables.scss' as *;
 
 .order-user {
   display: grid;

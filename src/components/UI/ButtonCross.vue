@@ -18,7 +18,8 @@ defineProps({
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/style/config/variables.scss';
+@use 'sass:color';
+@use '@/assets/style/config/variables.scss' as *;
 
 .btn-cross {
   border: 1px solid transparent;
@@ -84,11 +85,11 @@ defineProps({
 
   @media #{$hover-min-width} {
     &:hover &__cross &__line {
-      background-color: darken($sunglow, 15%);
+      background-color: color.adjust($sunglow, $lightness: -20%);
     }
 
     &:hover {
-      color: darken($grenadier, 15%);
+      color: color.adjust($grenadier, $lightness: -15%);
     }
   }
 

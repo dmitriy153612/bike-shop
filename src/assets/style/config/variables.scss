@@ -1,5 +1,7 @@
+@use 'sass:color';
+
 $sunglow: #ffc929;
-$sunglowLighten: lighten($sunglow, 20%);
+$sunglowLighten: color.adjust($sunglow, $lightness: 20%);
 $black: #000;
 $grenadier: #dd2c00;
 $white: #fff;

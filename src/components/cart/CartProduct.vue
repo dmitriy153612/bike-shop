@@ -117,7 +117,7 @@ async function fetchAmount(): Promise<void> {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/style/config/variables.scss';
+@use '@/assets/style/config/variables.scss' as *;
 
 @media #{$screen-small} {
   .cart-product {

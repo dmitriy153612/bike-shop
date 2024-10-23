@@ -72,7 +72,7 @@ async function register(): Promise<void> {
   validateEmail(email.value, emailError)
   validatePassword(password.value, passwordError)
   validatePasswordConfirm(passwordConfirm.value, password.value)
-
+  console.log(registrationStore.error)
   if (emailError.value || passwordError.value || passwordConfirmError.value) {
     return
   }
@@ -85,6 +85,7 @@ async function register(): Promise<void> {
   if (registrationStore.error) {
     if (registrationStore.error?.response?.data === 'Email is already in use') {
       emailError.value = 'Данный Email уже зарегестрирован'
+      registrationStore.error = null
     }
   } else {
     email.value = ''
@@ -101,7 +102,8 @@ function showLoginForm() {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/style/config/variables.scss';
+@use 'sass:color';
+@use '@/assets/style/config/variables.scss' as *;
 
 .user-form {
   display: grid;
@@ -140,17 +142,17 @@ function showLoginForm() {
   }
 
   &__account-btn:focus {
-    border-color: lighten($lochmara, 20%);
+    border-color: color.adjust($lochmara, $lightness: 20%);
   }
 
   @media #{$hover-min-width} {
     &__account-btn:hover {
-      color: lighten($lochmara, 20%);
+      color: color.adjust($lochmara, $lightness: 20%);
     }
   }
 
   &__account-btn:active {
-    color: lighten($lochmara, 40%);
+    color: color.adjust($lochmara, $lightness: 40%);
   }
 
   .app-input__input.focus + .app-input__label {

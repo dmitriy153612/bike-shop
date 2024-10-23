@@ -12,7 +12,7 @@ defineProps({ legend: { type: String, required: true } })
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/style/config/variables.scss';
+@use '@/assets/style/config/variables.scss' as *;
 
 .order-fieldset {
   position: relative;

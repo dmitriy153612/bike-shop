@@ -43,7 +43,8 @@ const isChecked = computed(() => props.value === props.modelValue)
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/style/config/variables.scss';
+@use 'sass:color';
+@use '@/assets/style/config/variables.scss' as *;
 
 .switcher-btn {
   position: relative;
@@ -51,14 +52,14 @@ const isChecked = computed(() => props.value === props.modelValue)
 
   @media #{$hover-min-width} {
     &:hover {
-      background-color: lighten($sunglow, 38%);
+      background-color: color.adjust($sunglow, $lightness: 38%);
     }
   }
 
   &--checked & {
     &__label {
       border-color: $sunglow;
-      background-color: lighten($sunglow, 38%);
+      background-color: color.adjust($sunglow, $lightness: 38%);
     }
   }
 
@@ -94,7 +95,7 @@ const isChecked = computed(() => props.value === props.modelValue)
   }
 
   &__label:checked {
-    background-color: lighten($sunglow, 25%);
+    background-color: color.adjust($sunglow, $lightness: 25%);
     border-color: $sunglow;
   }
 
