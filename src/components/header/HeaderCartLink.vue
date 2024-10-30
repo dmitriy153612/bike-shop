@@ -59,8 +59,6 @@ const ariaLabel = computed<string>(() => `Перейти в корзину. То
     stroke: $grenadier;
   }
 
-  
-
   &__svg {
     display: block;
     stroke: $sunglow;
