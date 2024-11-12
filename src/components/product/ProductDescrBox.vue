@@ -61,8 +61,8 @@ const updatedSizeId = computed({
   set: (newValue) => emit('update:modelValue', newValue)
 })
 
-function createEvent() {
-  emit('addToCart')
+function createEvent(e: Event) {
+  emit('addToCart', e)
 }
 </script>
 

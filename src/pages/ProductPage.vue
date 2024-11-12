@@ -44,6 +44,8 @@ import { useProductStore } from '@/stores/productStore'
 import { ref, watch, computed, watchEffect } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useCartStore } from '@/stores/cartStore'
+import { useGlobalStore } from '@/stores/globalStore'
+import { useLoginStore } from '@/stores/loginStore'
 import { type Size } from '@/interfaces/CatalogInterfaces'
 import {
   type ProductDetail,
@@ -54,6 +56,8 @@ const route = useRoute()
 const router = useRouter()
 const productStore = useProductStore()
 const cartStore = useCartStore()
+const globalStore = useGlobalStore()
+const loginStore = useLoginStore()
 
 const isProductError = ref(false)
 
@@ -114,7 +118,11 @@ const isQuerySizeIdExist = computed<boolean>(() =>
 
 productStore.fetchData({ id: productId.value })
 
-async function addToCart(): Promise<void> {
+async function addToCart(e: Event): Promise<void> {
+  if (!loginStore.token) {
+    globalStore.openLoginModal(true, e)
+    return
+  }
   await cartStore.fetchAddToCart({
     productId: productId.value,
     sizeId: sizeId.value,
